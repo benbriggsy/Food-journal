@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class FoodItem implements Parcelable {
-    String mProductName;
-    ArrayList<String> mIngredients;
-    Date mTimeAdded;
+    private String mProductName;
+    private ArrayList<String> mIngredients;
+    private Date mTimeAdded;
     private HashMap<String, Nutrient> mNutrientHashMap;
 
     private final String[] NUTRIENT_NAMES = {
@@ -31,6 +31,7 @@ public class FoodItem implements Parcelable {
 
     public FoodItem(String jsonData) throws JSONException, NotFoodOrDrinkException, NotTescoOwnBrandException {
         mIngredients = new ArrayList<>();
+        mNutrientHashMap = new HashMap<>();
         JSONObject productData = new JSONObject(jsonData);
         JSONArray products = productData.getJSONArray("products");
         checkUsableProduct(products);
@@ -42,7 +43,7 @@ public class FoodItem implements Parcelable {
 
 
         JSONArray nutrientJSON = products.getJSONObject(0).getJSONObject("calcNutrition").getJSONArray("calcNutrients");
-        for (int i = 0; i < nutrientJSON.length(); i++) {
+        for (int i = 0; i < NUTRIENT_NAMES.length; i++) {
             String name = nutrientJSON.getJSONObject(i).getString("name");
             double valuePer100 = Double.parseDouble(nutrientJSON.getJSONObject(i).getString("valuePer100"));
             double valuePerServing = Double.parseDouble(nutrientJSON.getJSONObject(i).getString("valuePerServing"));

@@ -18,10 +18,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Created by benbriggs on 29/11/2017.
- */
-
 public class FileStorageController {
     User mUser;
     private final String USER = "user.json";
@@ -66,10 +62,20 @@ public class FileStorageController {
         ingString = ingString.substring(0, ingString.length() - 2);
         foodItem.put("ingredients", ingString);
         foodItem.put("product", fi.getProductName());
-        for(int i = 0; i < NUTRIENT_NAMES.length; i++) {
-            foodItem.put(NUTRIENT_NAMES[i], fi.getNutrientHashMap().get(NUTRIENT_NAMES[i]));
-        }
+        foodItem.put("nutrients", nutrientsToJSON(fi));
         return foodItem;
+    }
+
+    public JSONArray nutrientsToJSON(FoodItem fi){
+        JSONArray ja = new JSONArray();
+        for(Nutrient n : fi.getNutrients()){
+            JSONObject jo = new JSONObject();
+            jo.put("name", n.getName());
+            jo.put("valuePer100", n.getValuePer100());
+            jo.put("valuePerServing", n.getValuePerServing());
+            ja.add(jo);
+        }
+        return ja;
     }
 
     public void writeObjectToFile(JSONObject obj, Context ctxt) throws IOException {
@@ -88,10 +94,19 @@ public class FileStorageController {
         while (i.hasNext()) {
             JSONObject foodItemJSON = (JSONObject) i.next();
             FoodItem foodItem = new FoodItem(foodItemJSON.get("product").toString(),
-                    foodItemJSON.get("ingredients").toString());
+                    foodItemJSON.get("ingredients").toString(), JSONToNutrients((JSONArray)foodItemJSON.get("nutrients")));
             foodItems.add(foodItem);
         }
         mUser.setHistory(foodItems);
+    }
+
+    public Nutrient[] JSONToNutrients(JSONArray ja){
+        Nutrient[] nutrients = new Nutrient[NUTRIENT_NAMES.length];
+        for (int i = 0; i < ja.size(); i++){
+            JSONObject jo = (JSONObject) ja.get(i);
+            nutrients[i] = new Nutrient((String) jo.get("name"), (Double) jo.get("valuePer100"), (Double) jo.get("valuePerServing"));
+        }
+        return nutrients;
     }
 
     public String readStorageFile(Context context) {

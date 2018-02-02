@@ -57,7 +57,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         public void bindFoodItem(FoodItem foodItem){
             Log.v(TAG, "entered bindHole");
-            mIngredients.setText(foodItem.getIngredients().toString());
+            mIngredients.setText(foodItem.getNutrientString());
             mProductName.setText(foodItem.getProductName());
         }
     }

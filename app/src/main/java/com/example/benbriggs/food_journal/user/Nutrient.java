@@ -30,6 +30,14 @@ class Nutrient implements Parcelable {
         return valuePerServing;
     }
 
+    @Override
+    public String toString() {
+        return "Nutrient{" +
+                "Name='" + Name + '\'' +
+                ", valuePer100=" + valuePer100 +
+                ", valuePerServing=" + valuePerServing +
+                '}';
+    }
 
     @Override
     public int describeContents() {
@@ -49,7 +57,7 @@ class Nutrient implements Parcelable {
         this.valuePerServing = (Double) in.readValue(Double.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Nutrient> CREATOR = new Parcelable.Creator<Nutrient>() {
+    public static final Creator<Nutrient> CREATOR = new Creator<Nutrient>() {
         @Override
         public Nutrient createFromParcel(Parcel source) {
             return new Nutrient(source);

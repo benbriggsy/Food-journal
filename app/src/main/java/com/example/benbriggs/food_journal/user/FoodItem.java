@@ -9,15 +9,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 public class FoodItem implements Parcelable {
     private String mProductName;
     private ArrayList<String> mIngredients;
     private Date mTimeAdded;
-    private HashMap<String, Nutrient> mNutrientHashMap;
+    private Nutrient[] mNutrients;
 
-    private final String[] NUTRIENT_NAMES = {
+    private String[] NUTRIENT_NAMES = {
             "Energy (kJ)",
             "Energy (kcal)",
             "Fat (g)",
@@ -31,7 +30,7 @@ public class FoodItem implements Parcelable {
 
     public FoodItem(String jsonData) throws JSONException, NotFoodOrDrinkException, NotTescoOwnBrandException {
         mIngredients = new ArrayList<>();
-        mNutrientHashMap = new HashMap<>();
+        mNutrients = new Nutrient[NUTRIENT_NAMES.length];
         JSONObject productData = new JSONObject(jsonData);
         JSONArray products = productData.getJSONArray("products");
         checkUsableProduct(products);
@@ -47,14 +46,15 @@ public class FoodItem implements Parcelable {
             String name = nutrientJSON.getJSONObject(i).getString("name");
             double valuePer100 = Double.parseDouble(nutrientJSON.getJSONObject(i).getString("valuePer100"));
             double valuePerServing = Double.parseDouble(nutrientJSON.getJSONObject(i).getString("valuePerServing"));
-            mNutrientHashMap.put(NUTRIENT_NAMES[i], new Nutrient(name, valuePer100, valuePerServing));
+            mNutrients[i] = new Nutrient(name, valuePer100, valuePerServing);
         }
         mTimeAdded = new Date();
     }
 
-    public FoodItem(String productName, String ingredients){
+    public FoodItem(String productName, String ingredients, Nutrient[] nutrients){
         mProductName = productName;
         mIngredients = new ArrayList<>();
+        mNutrients = nutrients;
 
         String[] split = ingredients.split(", ");
         for(String s : split){
@@ -89,8 +89,12 @@ public class FoodItem implements Parcelable {
         mIngredients = ingredients;
     }
 
-    public HashMap<String, Nutrient> getNutrientHashMap() {
-        return mNutrientHashMap;
+    public Nutrient[] getNutrients() {
+        return mNutrients;
+    }
+
+    public String getNutrientString() {
+        return mNutrients[1].toString();
     }
 
     @Override
@@ -99,7 +103,6 @@ public class FoodItem implements Parcelable {
                 ", mIngredients=" + mIngredients +
                 '}';
     }
-
 
     @Override
     public int describeContents() {
@@ -111,7 +114,8 @@ public class FoodItem implements Parcelable {
         dest.writeString(this.mProductName);
         dest.writeStringList(this.mIngredients);
         dest.writeLong(this.mTimeAdded != null ? this.mTimeAdded.getTime() : -1);
-        dest.writeSerializable(this.mNutrientHashMap);
+        dest.writeTypedArray(this.mNutrients, flags);
+        dest.writeStringArray(this.NUTRIENT_NAMES);
     }
 
     protected FoodItem(Parcel in) {
@@ -119,7 +123,8 @@ public class FoodItem implements Parcelable {
         this.mIngredients = in.createStringArrayList();
         long tmpMTimeAdded = in.readLong();
         this.mTimeAdded = tmpMTimeAdded == -1 ? null : new Date(tmpMTimeAdded);
-        this.mNutrientHashMap = (HashMap<String, Nutrient>) in.readSerializable();
+        this.mNutrients = in.createTypedArray(Nutrient.CREATOR);
+        this.NUTRIENT_NAMES = in.createStringArray();
     }
 
     public static final Creator<FoodItem> CREATOR = new Creator<FoodItem>() {

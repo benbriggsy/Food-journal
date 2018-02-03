@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.example.benbriggs.food_journal.user.Basket;
 import com.example.benbriggs.food_journal.user.FileStorageController;
 import com.example.benbriggs.food_journal.user.FoodItem;
 import com.example.benbriggs.food_journal.user.NotFoodOrDrinkException;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView ingredients;
     private String mJsonString;
     private User mUser;
+    private Basket mBasket;
     private FileStorageController mFileStorageController;
 
     private static final int RC_BARCODE_CAPTURE = 9001;
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setListeners();
 
         mUser = new User();
+        mBasket = new Basket();
         mFileStorageController = new FileStorageController(mUser);
         try {
             mFileStorageController.readJSONString(mFileStorageController.readStorageFile(this.getApplicationContext()));
@@ -150,6 +153,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mUser.addFoodItem(foodItem);
             Log.v(TAG, mUser.toString());
             mFileStorageController.saveUserToFile(this.getApplicationContext());
+            mBasket.addFoodItem(foodItem);
+            mBasket.calcALL();
+
+            Log.v("BASKET", mBasket.toString());
 
         } catch (NotTescoOwnBrandException | NotFoodOrDrinkException e) {
 

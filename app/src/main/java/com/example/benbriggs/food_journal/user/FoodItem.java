@@ -15,6 +15,8 @@ public class FoodItem implements Parcelable {
     private ArrayList<String> mIngredients;
     private Date mTimeAdded;
     private Nutrient[] mNutrients;
+    private boolean mIsFood;
+    private double mWeight;
 
     private String[] NUTRIENT_NAMES = {
             "Energy (kJ)",
@@ -40,6 +42,16 @@ public class FoodItem implements Parcelable {
         }
         mProductName = products.getJSONObject(0).getString("description");
 
+        //need to check here for what format the weight is in.
+        String unitsOM = products.getJSONObject(0).getJSONObject("qtyContents").getString("quantityUom");
+
+        if(unitsOM.equals("ml") || unitsOM.equals("g")){
+            mWeight = products.getJSONObject(0).getJSONObject("qtyContents").getDouble("totalQuantity");
+        }else if(unitsOM.equals("kg") || unitsOM.equals("l")){
+            mWeight = products.getJSONObject(0).getJSONObject("qtyContents").getDouble("totalQuantity")*1000;
+        }else{
+            throw new NotTescoOwnBrandException();
+        }
 
         JSONArray nutrientJSON = products.getJSONObject(0).getJSONObject("calcNutrition").getJSONArray("calcNutrients");
         for (int i = 0; i < NUTRIENT_NAMES.length; i++) {
@@ -55,6 +67,7 @@ public class FoodItem implements Parcelable {
         mProductName = productName;
         mIngredients = new ArrayList<>();
         mNutrients = nutrients;
+
 
         String[] split = ingredients.split(", ");
         for(String s : split){
@@ -95,6 +108,10 @@ public class FoodItem implements Parcelable {
 
     public String getNutrientString() {
         return mNutrients[1].toString();
+    }
+
+    public double getWeight() {
+        return mWeight;
     }
 
     @Override

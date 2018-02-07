@@ -25,7 +25,7 @@ public class HistoryActivity  extends AppCompatActivity {
         Intent intent = getIntent();
         User user = intent.getParcelableExtra("user");
 
-        HistoryAdapter adapter = new HistoryAdapter(user.getHistory());
+        BasketHistoryAdapter adapter = new BasketHistoryAdapter(user.getBasketHistory());
         mRecyclerView.setAdapter(adapter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

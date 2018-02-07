@@ -12,9 +12,11 @@ import java.util.ArrayList;
 public class User implements Parcelable{
 
     private ArrayList<FoodItem> mHistory;
+    private ArrayList<Basket> mBasketHistory;
 
     public User(){
-        mHistory = new ArrayList<>();
+        mHistory        = new ArrayList<>();
+        mBasketHistory  = new ArrayList<>();
     }
 
     public void addFoodItem(FoodItem item){
@@ -25,6 +27,10 @@ public class User implements Parcelable{
         return mHistory;
     }
 
+    public ArrayList<Basket> getBasketHistory() {
+        return mBasketHistory;
+    }
+
     public void setHistory(ArrayList<FoodItem> history) {
         mHistory = history;
     }
@@ -33,6 +39,7 @@ public class User implements Parcelable{
     public String toString() {
         return "User{" +
                 "mHistory=" + mHistory +
+                ",\nmBasketHistory=" + mBasketHistory +
                 '}';
     }
 
@@ -44,10 +51,12 @@ public class User implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.mHistory);
+        dest.writeTypedList(this.mBasketHistory);
     }
 
     protected User(Parcel in) {
         this.mHistory = in.createTypedArrayList(FoodItem.CREATOR);
+        this.mBasketHistory = in.createTypedArrayList(Basket.CREATOR);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

@@ -21,7 +21,6 @@ public class Basket implements Parcelable {
     private double mTotalProtein;
     private double mTotalSalt;
 
-
     private double mPercentageEnergyCal;
     private double mPercentageFat;
     private double mPercentageSaturates;

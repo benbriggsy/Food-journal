@@ -25,12 +25,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BarcodeCaptureActivity"
+            android:name=".barcodeModel.BarcodeCaptureActivity"
             android:label="TESCO"/>
-        <activity
-            android:name=".OcrCaptureActivity"
-            android:label="SAINSBURY&apos;S">
-        </activity>
         <activity
             android:name=".HistoryActivity"
             android:label="@string/title_activity_history_activity"

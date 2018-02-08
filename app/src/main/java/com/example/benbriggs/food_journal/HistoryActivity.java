@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.example.benbriggs.food_journal.adapters.BasketHistoryAdapter;
 import com.example.benbriggs.food_journal.user.User;
 
 /**

@@ -26,6 +26,8 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.example.benbriggs.food_journal.adapters.MainProductAdapter;
+import com.example.benbriggs.food_journal.barcodeModel.BarcodeCaptureActivity;
 import com.example.benbriggs.food_journal.user.Basket;
 import com.example.benbriggs.food_journal.user.FileStorageController;
 import com.example.benbriggs.food_journal.user.FoodItem;

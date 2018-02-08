@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.benbriggs.food_journal.adapters.MainProductAdapter;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView mRecyclerView;
     private String mJsonString;
     private User mUser;
+    private TextView mErrorMessage;
     private Basket mBasket;
     private FileStorageController mFileStorageController;
 
@@ -157,8 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } catch (NotTescoOwnBrandException | NotFoodOrDrinkException e) {
 
-//            productName.setText(e.getMessage());
-//            ingredients.setText("please scan another Tesco product");
+            mErrorMessage.setText(e.getMessage());
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
@@ -250,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void createBindings(){
         useFlash = (CompoundButton) findViewById(R.id.use_flash);
         mRecyclerView = (RecyclerView) findViewById(R.id.mainRecycler);
+        mErrorMessage = (TextView) findViewById(R.id.errorMessage);
     }
 
     private void setListeners(){

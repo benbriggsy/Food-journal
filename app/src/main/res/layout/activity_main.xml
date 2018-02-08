@@ -33,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/read_barcode2"
         android:layout_alignBottom="@+id/read_barcode2"
-        android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/read_barcode2"
         android:text="@string/history"/>
 
@@ -42,7 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/historyButton"
-        android:layout_alignStart="@+id/historyButton"
+        android:layout_alignEnd="@+id/mainRecycler"
+        android:layout_marginBottom="49dp"
         android:checked="false"
         android:text="@string/use_flash"/>
 
@@ -51,5 +51,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/use_flash"
-        android:layout_marginBottom="29dp"/>
+        android:layout_alignStart="@+id/errorMessage"/>
+
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/use_flash"
+        android:layout_alignStart="@+id/read_barcode"
+        />
 </RelativeLayout>

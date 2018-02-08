@@ -2,6 +2,7 @@ package com.example.benbriggs.food_journal.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,12 @@ public class User implements Parcelable{
 
     public void addFoodItem(FoodItem item){
         mHistory.add(item);
+    }
+
+    public void addBasket(Basket basket){
+        mBasketHistory.add(basket);
+
+        Log.v("User", "Amount of baskets: " + mBasketHistory.size());
     }
 
     public ArrayList<FoodItem> getHistory() {

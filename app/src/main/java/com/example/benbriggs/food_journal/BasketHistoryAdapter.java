@@ -68,14 +68,14 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
 
         public void bindBasket(Basket basket){
             Log.v(TAG, "entered bindHole");
-            mPercentageEnergyCal.setText(basket.getPercentageEnergyCal() + "%");
-            mPercentageFat.setText(basket.getPercentageFat() + "%");
-            mPercentageSaturates.setText(basket.getPercentageSaturates() + "%");
-            mPercentageCarbohydrate.setText(basket.getPercentageCarbohydrate() + "%");
-            mPercentageSugars.setText(basket.getPercentageSugars() + "%");
-            mPercentageFibre.setText(basket.getPercentageFibre() + "%");
-            mPercentageProtein.setText(basket.getPercentageProtein() + "%");
-            mPercentageSalt.setText(basket.getPercentageSalt() + "%");
+            mPercentageEnergyCal.setText(Math.round(basket.getPercentageEnergyCal()) + "%");
+            mPercentageFat.setText(Math.round(basket.getPercentageFat()) + "%");
+            mPercentageSaturates.setText(Math.round(basket.getPercentageSaturates()) + "%");
+            mPercentageCarbohydrate.setText(Math.round(basket.getPercentageCarbohydrate()) + "%");
+            mPercentageSugars.setText(Math.round(basket.getPercentageSugars()) + "%");
+            mPercentageFibre.setText(Math.round(basket.getPercentageFibre()) + "%");
+            mPercentageProtein.setText(Math.round(basket.getPercentageProtein()) + "%");
+            mPercentageSalt.setText(Math.round(basket.getPercentageSalt()) + "%");
         }
     }
 }

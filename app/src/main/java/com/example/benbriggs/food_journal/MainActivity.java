@@ -19,10 +19,12 @@ package com.example.benbriggs.food_journal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.benbriggs.food_journal.user.Basket;
 import com.example.benbriggs.food_journal.user.FileStorageController;
@@ -47,12 +49,8 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // use a compound button so either checkbox or switch widgets work.
-    private CompoundButton autoFocus;
     private CompoundButton useFlash;
-    private TextView statusMessage;
-    private TextView barcodeValue;
-    private TextView productName;
-    private TextView ingredients;
+    private RecyclerView mRecyclerView;
     private String mJsonString;
     private User mUser;
     private Basket mBasket;
@@ -145,20 +143,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
 
             foodItem = new FoodItem(jsonData);
-            productName.setText(foodItem.getProductName().toString());
-            ingredients.setText(foodItem.getIngredients().toString());
             mUser.addFoodItem(foodItem);
             Log.v(TAG, mUser.toString());
             mFileStorageController.saveUserToFile(this.getApplicationContext());
             mBasket.addFoodItem(foodItem);
             mBasket.calcALL();
 
+            RefreshRecyclerView();
+
             Log.v("BASKET", mBasket.toString());
 
         } catch (NotTescoOwnBrandException | NotFoodOrDrinkException e) {
 
-            productName.setText(e.getMessage());
-            ingredients.setText("please scan another Tesco product");
+//            productName.setText(e.getMessage());
+//            ingredients.setText("please scan another Tesco product");
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
@@ -185,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.read_barcode) {
             // launch barcode activity for tesco.
             Intent intent = new Intent(this, BarcodeCaptureActivity.class);
-            intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
+            intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
             intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
 
             startActivityForResult(intent, RC_BARCODE_CAPTURE);
@@ -193,9 +191,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (v.getId() == R.id.read_barcode2) {
             // launch barcode activity.
-            Intent intent = new Intent(this, OcrCaptureActivity.class);
-
-            startActivityForResult(intent, 9001);
+//            Intent intent = new Intent(this, OcrCaptureActivity.class);
+//
+//            startActivityForResult(intent, 9001);
+            mUser.addBasket(mBasket);
+            mBasket = new Basket();
+            RefreshRecyclerView();
         }
     }
 
@@ -227,18 +228,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                    statusMessage.setText(R.string.barcode_success);
-                    barcodeValue.setText(barcode.displayValue);
                     String gtin  = barcode.rawValue;
                     Log.d(TAG, "Barcode readStorageFile: " + barcode.displayValue);
                     getTescoInfo(gtin);
                 } else {
-                    statusMessage.setText(R.string.barcode_failure);
+                    //statusMessage.setText(R.string.barcode_failure);
+                    Toast.makeText(this, "No barcode captured", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "No barcode captured, intent data is null");
                 }
             } else {
-                statusMessage.setText(String.format(getString(R.string.barcode_error),
-                        CommonStatusCodes.getStatusCodeString(resultCode)));
+                Toast.makeText(this, "Unsuccessful", Toast.LENGTH_SHORT).show();
             }
         }
         else {
@@ -247,16 +246,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void createBindings(){
-        statusMessage = (TextView)findViewById(R.id.status_message);
-        barcodeValue = (TextView)findViewById(R.id.barcode_value);
-        productName = (TextView)findViewById(R.id.productName);
-        ingredients = (TextView)findViewById(R.id.ingredients);
-        autoFocus = (CompoundButton) findViewById(R.id.auto_focus);
         useFlash = (CompoundButton) findViewById(R.id.use_flash);
+        mRecyclerView = (RecyclerView) findViewById(R.id.mainRecycler);
     }
+
     private void setListeners(){
         findViewById(R.id.read_barcode).setOnClickListener(this);
         findViewById(R.id.read_barcode2).setOnClickListener(this);
         findViewById(R.id.historyButton).setOnClickListener(this);
+    }
+
+    public void RefreshRecyclerView(){
+        MainProductAdapter adapter = new MainProductAdapter(mBasket.getProducts());
+        mRecyclerView.setAdapter(adapter);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
     }
 }

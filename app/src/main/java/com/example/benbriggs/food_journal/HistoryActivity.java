@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.benbriggs.food_journal.user.User;
 
@@ -18,12 +19,14 @@ public class HistoryActivity  extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.history_activity);
+        setContentView(R.layout.activity_history);
 
         createBindings();
 
         Intent intent = getIntent();
         User user = intent.getParcelableExtra("user");
+
+        Log.v("HistoryActivity", "entered bindHole " + user.getBasketHistory());
 
         BasketHistoryAdapter adapter = new BasketHistoryAdapter(user.getBasketHistory());
         mRecyclerView.setAdapter(adapter);
@@ -35,6 +38,6 @@ public class HistoryActivity  extends AppCompatActivity {
     }
 
     private void createBindings(){
-        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        mRecyclerView = findViewById(R.id.recyclerView);
     }
 }

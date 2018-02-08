@@ -219,6 +219,9 @@ public class Basket implements Parcelable {
         return mRecommendedDays;
     }
 
+    public ArrayList<FoodItem> getProducts() {
+        return mProducts;
+    }
 
     @Override
     public int describeContents() {

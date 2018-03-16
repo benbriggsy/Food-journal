@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 public class FileStorageController {
     User mUser;
-    private final String USER = "user.json";
+    private final String USER = "user2.json";
 
     private final String[] NUTRIENT_NAMES = {
             "Energy (kJ)",
@@ -41,21 +41,35 @@ public class FileStorageController {
     public void saveUserToFile(Context ctxt) throws IOException {
         JSONObject root = new JSONObject();
         JSONArray user = new JSONArray();
+        JSONArray baskets = new JSONArray();
 
         for(FoodItem fi : mUser.getHistory()){
             user.add(foodItemToJSON(fi));
         }
+        for(Basket b : mUser.getBasketHistory()){
+            baskets.add(basketToJSON(b));
+        }
 
         root.put("userHistory", user);
+        root.put("baskets", baskets);
 
         Log.d("Controller", root.toString());
 
         writeObjectToFile(root, ctxt);
     }
 
+    public JSONArray basketToJSON(Basket b){
+        JSONArray basket = new JSONArray();
+        for (FoodItem fi: b.getProducts()) {
+            JSONObject jo = foodItemToJSON(fi);
+            basket.add(jo);
+        }
+        return basket;
+    }
+
     public JSONObject foodItemToJSON(FoodItem fi){
         JSONObject foodItem = new JSONObject();
-        String ingString = "";
+        String ingString = " ";
         for(String ingredient : fi.getIngredients()){
             ingString = ingString + ingredient + ", ";
         }
@@ -63,6 +77,7 @@ public class FileStorageController {
         foodItem.put("ingredients", ingString);
         foodItem.put("product", fi.getProductName());
         foodItem.put("nutrients", nutrientsToJSON(fi));
+        foodItem.put("weight", fi.getWeight());
         return foodItem;
     }
 
@@ -89,6 +104,7 @@ public class FileStorageController {
         JSONParser parser = new JSONParser();
         JSONObject root = (JSONObject) parser.parse(json);
         JSONArray inner = (JSONArray) root.get("userHistory");
+        JSONArray innerBaskets = (JSONArray) root.get("baskets");
 
         Iterator i = inner.iterator();
         while (i.hasNext()) {
@@ -98,6 +114,25 @@ public class FileStorageController {
             foodItems.add(foodItem);
         }
         mUser.setHistory(foodItems);
+
+        if(innerBaskets != null){
+            Iterator j = innerBaskets.iterator();
+            while (j.hasNext()) {
+                JSONArray basketJSON = (JSONArray) j.next();
+                Basket b = new Basket();
+                Iterator k = basketJSON.iterator();
+                while (k.hasNext()) {
+                    JSONObject foodItemJSON = (JSONObject) k.next();
+                    FoodItem foodItem = new FoodItem(foodItemJSON.get("product").toString(),
+                            foodItemJSON.get("ingredients").toString(), JSONToNutrients((JSONArray)foodItemJSON.get("nutrients")), (Double) foodItemJSON.get("weight"));
+                    b.addFoodItem(foodItem);
+                }
+                Log.d("basketTest", b.toString());
+                b.calcALL();
+                Log.d("basketTest", b.toString());
+                mUser.addBasket(b);
+            }
+        }
     }
 
     public Nutrient[] JSONToNutrients(JSONArray ja){

@@ -42,6 +42,10 @@ public class User implements Parcelable{
         mHistory = history;
     }
 
+    public void setBasketHistory(ArrayList<Basket> basketHistory) {
+        mBasketHistory = basketHistory;
+    }
+
     @Override
     public String toString() {
         return "User{" +

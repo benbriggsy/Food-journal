@@ -36,10 +36,17 @@ public class FoodItem implements Parcelable {
         JSONObject productData = new JSONObject(jsonData);
         JSONArray products = productData.getJSONArray("products");
         checkUsableProduct(products);
-        JSONArray arr = products.getJSONObject(0).getJSONArray("ingredients");
-        for(int i = 0; i < arr.length(); i++){
-            mIngredients.add(arr.getString(i));
+
+        //make sure ingredients exists
+        if(products.getJSONObject(0).has("ingredients")) {
+            JSONArray arr = products.getJSONObject(0).getJSONArray("ingredients");
+            for (int i = 0; i < arr.length(); i++) {
+                mIngredients.add(arr.getString(i));
+            }
+        }else{
+            mIngredients.add("none");
         }
+
         mProductName = products.getJSONObject(0).getString("description");
 
         //need to check here for what format the weight is in.
@@ -74,6 +81,18 @@ public class FoodItem implements Parcelable {
             mIngredients.add(s);
         }
     }
+    public FoodItem(String productName, String ingredients, Nutrient[] nutrients, Double weight){
+        mProductName = productName;
+        mIngredients = new ArrayList<>();
+        mNutrients = nutrients;
+        mWeight = weight;
+
+
+        String[] split = ingredients.split(", ");
+        for(String s : split){
+            mIngredients.add(s);
+        }
+    }
 
     private void checkUsableProduct(JSONArray products) throws JSONException,
             NotFoodOrDrinkException, NotTescoOwnBrandException {
@@ -81,7 +100,8 @@ public class FoodItem implements Parcelable {
                 !products.getJSONObject(0).getJSONObject("productCharacteristics").getBoolean("isDrink")){
             throw new NotFoodOrDrinkException();
         }
-        if(!products.getJSONObject(0).getString("brand").equals("TESCO")){
+        if(!products.getJSONObject(0).getString("brand").equals("TESCO") &&
+                !products.getJSONObject(0).getString("brand").equals("TESCO VALUE")){
             throw new NotTescoOwnBrandException(products.getJSONObject(0).getString("brand"));
         }
     }

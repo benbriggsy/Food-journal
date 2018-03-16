@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.util.Date;
 
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -148,10 +149,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             foodItem = new FoodItem(jsonData);
             mUser.addFoodItem(foodItem);
-            Log.v(TAG, mUser.toString());
-            mFileStorageController.saveUserToFile(this.getApplicationContext());
+            Log.v(TAG, foodItem.toString());
             mBasket.addFoodItem(foodItem);
             mBasket.calcALL();
+            mFileStorageController.saveUserToFile(this.getApplicationContext());
 
             RefreshRecyclerView();
 
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         Log.v(TAG, v.getId() + "");
 
-
+        //view history of baskets
         if (v.getId() == R.id.historyButton) {
             // launch barcode activity.
             Intent intent = new Intent(this, HistoryActivity.class);
@@ -183,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
 
+        //add a new item to the current basket
         if (v.getId() == R.id.read_barcode) {
             // launch barcode activity for tesco.
             Intent intent = new Intent(this, BarcodeCaptureActivity.class);
@@ -192,14 +194,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(intent, RC_BARCODE_CAPTURE);
         }
 
+        //add basket to user and view history
         if (v.getId() == R.id.read_barcode2) {
-            // launch barcode activity.
-//            Intent intent = new Intent(this, OcrCaptureActivity.class);
-//
-//            startActivityForResult(intent, 9001);
+            mBasket.setDate(new Date());
             mUser.addBasket(mBasket);
+            try {
+                mFileStorageController.saveUserToFile(this.getApplicationContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             mBasket = new Basket();
             RefreshRecyclerView();
+            Intent intent = new Intent(this, HistoryActivity.class);
+            intent.putExtra("user", mUser);
+            Log.v(TAG, "hello");
+            startActivity(intent);
         }
     }
 

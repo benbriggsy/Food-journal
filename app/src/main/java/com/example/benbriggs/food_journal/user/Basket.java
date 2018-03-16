@@ -2,8 +2,11 @@ package com.example.benbriggs.food_journal.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
+
 /**
  * Created by benbriggs on 02/02/2018.
  */
@@ -36,6 +39,8 @@ public class Basket implements Parcelable {
 
     private int mDays;
     private double mRecommendedDays;
+
+    private Date mDate;
 
     private String[] NUTRIENT_NAMES = {
             "Energy (kJ)",
@@ -101,7 +106,9 @@ public class Basket implements Parcelable {
             Nutrient[] nutrients = fi.getNutrients();
             double multiplier = fi.getWeight()/100/mNoPeople;
 
+            Log.d("energy", " "+mTotalEnergy);
             mTotalEnergy        += nutrients[0].getValuePer100() * multiplier;
+            Log.d("energy2", " "+mTotalEnergy);
             mTotalEnergyCal     += nutrients[1].getValuePer100() * multiplier;
             mTotalFat           += nutrients[2].getValuePer100() * multiplier;
             mTotalSaturates     += nutrients[3].getValuePer100() * multiplier;
@@ -173,6 +180,14 @@ public class Basket implements Parcelable {
                 ", mDays=" + mDays +
                 ", mRecommendedDays=" + mRecommendedDays +
                 '}';
+    }
+
+    public Date getDate() {
+        return mDate;
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
     }
 
     public void setDays(int days) {

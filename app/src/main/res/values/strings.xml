@@ -23,7 +23,7 @@
     <string name="title_activity_history_activity">HistoryActivityActivity</string>
     <string name="energy">Energy</string>
     <string name="fat">Fat</string>
-    <string name="saturates">Saturates</string>
+    <string name="saturates">Sats</string>
     <string name="carbohydrate">Carbs</string>
     <string name="sugar">Sugar</string>
     <string name="fibre">Fibre</string>
@@ -31,4 +31,5 @@
     <string name="salt">Salt</string>
     <string name="add_to_basket">ADD TO BASKET</string>
     <string name="recommended_days">Recommended Days:</string>
+    <string name="_0">0</string>
 </resources>

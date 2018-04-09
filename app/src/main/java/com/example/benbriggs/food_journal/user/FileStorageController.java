@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 public class FileStorageController {
     User mUser;
-    private final String USER = "user2.json";
+    private final String USER = "user3.json";
 
     private final String[] NUTRIENT_NAMES = {
             "Energy (kJ)",

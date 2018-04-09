@@ -145,10 +145,11 @@ public class Basket implements Parcelable {
     }
 
     private void calcRecommendedDays(){
-        mRecommendedDays = (int)((mTotalEnergyCal / ENERGY) / mNoPeople);
-        if(mTotalEnergyCal % ENERGY > 0){
-            mRecommendedDays++;
+        mRecommendedDays = ((mTotalEnergyCal / ENERGY) / mNoPeople);
+        if(mRecommendedDays - ((int)mRecommendedDays) > 0.5){
+            mRecommendedDays = mRecommendedDays + 1;
         }
+        mRecommendedDays = (int)mRecommendedDays;
     }
 
     private void setValuesToZero(){

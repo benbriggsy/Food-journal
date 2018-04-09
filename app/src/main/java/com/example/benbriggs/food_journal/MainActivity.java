@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(intent, RC_BARCODE_CAPTURE);
         }
 
-        //add basket to user and view history
+        //add basket to user
         if (v.getId() == R.id.save_basket) {
             mBasket.setDate(new Date());
             mUser.addBasket(mBasket);
@@ -216,9 +216,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mBasket = new Basket();
             RefreshRecyclerView();
             RefreshNutrition();
-            Intent intent = new Intent(this, HistoryActivity.class);
-            intent.putExtra("user", mUser);
-            startActivity(intent);
         }
     }
 

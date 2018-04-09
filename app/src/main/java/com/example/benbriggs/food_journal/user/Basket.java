@@ -98,6 +98,7 @@ public class Basket implements Parcelable {
     }
 
     private void calculateTotals(){
+        setValuesToZero();
         for (FoodItem fi: mProducts) {
             Nutrient[] nutrients = fi.getNutrients();
             double multiplier = fi.getWeight()/100/mNoPeople;

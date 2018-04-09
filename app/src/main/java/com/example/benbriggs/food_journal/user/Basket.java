@@ -2,14 +2,10 @@ package com.example.benbriggs.food_journal.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by benbriggs on 02/02/2018.
- */
 
 public class Basket implements Parcelable {
     private ArrayList<FoodItem> mProducts;
@@ -101,14 +97,12 @@ public class Basket implements Parcelable {
         calculatePercentages();
     }
 
-    public void calculateTotals(){
+    private void calculateTotals(){
         for (FoodItem fi: mProducts) {
             Nutrient[] nutrients = fi.getNutrients();
             double multiplier = fi.getWeight()/100/mNoPeople;
 
-            Log.d("energy", " "+mTotalEnergy);
             mTotalEnergy        += nutrients[0].getValuePer100() * multiplier;
-            Log.d("energy2", " "+mTotalEnergy);
             mTotalEnergyCal     += nutrients[1].getValuePer100() * multiplier;
             mTotalFat           += nutrients[2].getValuePer100() * multiplier;
             mTotalSaturates     += nutrients[3].getValuePer100() * multiplier;
@@ -121,7 +115,7 @@ public class Basket implements Parcelable {
         }
     }
 
-    public void calculatePercentages(){
+    private void calculatePercentages(){
         if(mDays == 0){
             mPercentageEnergyCal    = ((mTotalEnergyCal/mRecommendedDays)/ENERGY) * 100;
             mPercentageFat          = ((mTotalFat/mRecommendedDays)/FAT) * 100;
@@ -146,6 +140,9 @@ public class Basket implements Parcelable {
 
     private void calcRecommendedDays(){
         mRecommendedDays = ((mTotalEnergyCal / ENERGY) / mNoPeople);
+        if(mRecommendedDays < 1){
+            mRecommendedDays = 1;
+        }
         if(mRecommendedDays - ((int)mRecommendedDays) > 0.5){
             mRecommendedDays = mRecommendedDays + 1;
         }
@@ -271,7 +268,7 @@ public class Basket implements Parcelable {
         dest.writeStringArray(this.NUTRIENT_NAMES);
     }
 
-    protected Basket(Parcel in) {
+    private Basket(Parcel in) {
         this.mProducts = in.createTypedArrayList(FoodItem.CREATOR);
         this.mTotalEnergy = in.readDouble();
         this.mTotalEnergyCal = in.readDouble();
@@ -297,7 +294,7 @@ public class Basket implements Parcelable {
         this.NUTRIENT_NAMES = in.createStringArray();
     }
 
-    public static final Parcelable.Creator<Basket> CREATOR = new Parcelable.Creator<Basket>() {
+    static final Parcelable.Creator<Basket> CREATOR = new Parcelable.Creator<Basket>() {
         @Override
         public Basket createFromParcel(Parcel source) {
             return new Basket(source);

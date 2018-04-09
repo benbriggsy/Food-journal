@@ -17,6 +17,7 @@
 package com.example.benbriggs.food_journal;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +52,18 @@ import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    public TextView mPercentageEnergyCal;
+    public TextView mPercentageFat;
+    public TextView mPercentageSaturates;
+    public TextView mPercentageCarbohydrate;
+    public TextView mPercentageSugars;
+    public TextView mPercentageFibre;
+    public TextView mPercentageProtein;
+    public TextView mPercentageSalt;
+
+
+    public TextView mDays;
+
 
     // use a compound button so either checkbox or switch widgets work.
     private CompoundButton useFlash;
@@ -94,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .addHeader("Ocp-Apim-Subscription-Key", APIkey)
                 .build();
 
-        Log.v(TAG, "here we go...");
         okhttp3.Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -123,12 +135,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             @Override
                             public void run() {
-                                Log.v(TAG, mJsonString);
                                 try {
                                     newEntryScanned(mJsonString);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
+                                } catch (JSONException | IOException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -143,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void newEntryScanned(String jsonData) throws JSONException, IOException {
-        FoodItem foodItem = null;
+        FoodItem foodItem;
 
         try {
 
@@ -155,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFileStorageController.saveUserToFile(this.getApplicationContext());
 
             RefreshRecyclerView();
+            RefreshNutrition();
 
             Log.v("BASKET", mBasket.toString());
 
@@ -195,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //add basket to user and view history
-        if (v.getId() == R.id.read_barcode2) {
+        if (v.getId() == R.id.save_basket) {
             mBasket.setDate(new Date());
             mUser.addBasket(mBasket);
             try {
@@ -205,9 +215,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             mBasket = new Basket();
             RefreshRecyclerView();
+            RefreshNutrition();
             Intent intent = new Intent(this, HistoryActivity.class);
             intent.putExtra("user", mUser);
-            Log.v(TAG, "hello");
             startActivity(intent);
         }
     }
@@ -241,7 +251,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     String gtin  = barcode.rawValue;
-                    Log.d(TAG, "Barcode readStorageFile: " + barcode.displayValue);
                     getTescoInfo(gtin);
                 } else {
                     //statusMessage.setText(R.string.barcode_failure);
@@ -258,14 +267,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void createBindings(){
-        useFlash = (CompoundButton) findViewById(R.id.use_flash);
-        mRecyclerView = (RecyclerView) findViewById(R.id.mainRecycler);
-        mErrorMessage = (TextView) findViewById(R.id.errorMessage);
+        useFlash                = findViewById(R.id.use_flash);
+        mRecyclerView           = findViewById(R.id.mainRecycler);
+        mErrorMessage           = findViewById(R.id.errorMessage);
+        mPercentageEnergyCal    = findViewById(R.id.energyValue);
+        mPercentageFat          = findViewById(R.id.fatValue);
+        mPercentageSaturates    = findViewById(R.id.saturatesValue);
+        mPercentageCarbohydrate = findViewById(R.id.carbValue);
+        mPercentageSugars       = findViewById(R.id.sugarValue);
+        mPercentageFibre        = findViewById(R.id.fibreValue);
+        mPercentageProtein      = findViewById(R.id.proteinValue);
+        mPercentageSalt         = findViewById(R.id.saltValue);
+        mDays                   = findViewById(R.id.daysValue);
     }
 
     private void setListeners(){
         findViewById(R.id.read_barcode).setOnClickListener(this);
-        findViewById(R.id.read_barcode2).setOnClickListener(this);
+        findViewById(R.id.save_basket).setOnClickListener(this);
         findViewById(R.id.historyButton).setOnClickListener(this);
     }
 
@@ -276,5 +294,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+    }
+
+    public void RefreshNutrition(){
+        bindBasket(mBasket);
+    }
+
+    public void bindBasket(Basket basket){
+        fillInfo(mPercentageEnergyCal,      basket.getPercentageEnergyCal());
+        fillInfo(mPercentageFat,            basket.getPercentageFat());
+        fillInfo(mPercentageSaturates,      basket.getPercentageSaturates());
+        fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate());
+        fillInfo(mPercentageSugars,         basket.getPercentageSugars());
+        fillInfo(mPercentageFibre,          basket.getPercentageFibre());
+        fillInfo(mPercentageProtein,        basket.getPercentageProtein());
+        fillInfo(mPercentageSalt,           basket.getPercentageSalt());
+
+        mDays.setText(Math.round(basket.getRecommendedDays()) + "");
+    }
+
+    private void fillInfo(TextView tv, double percentage){
+        tv.setText(Math.round(percentage) + "%");
+
+        if(Math.abs(percentage - 100) <= 10){
+            tv.setBackgroundColor(Color.GREEN);
+        }else if(Math.abs(percentage - 100) <= 20){
+            tv.setBackgroundColor(Color.YELLOW);
+        }else{
+            tv.setBackgroundColor(Color.RED);
+        }
     }
 }

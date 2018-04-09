@@ -8,7 +8,6 @@
     android:layout_height="wrap_content"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="70dp">
-
     <TextView
         android:id="@+id/daysLabel"
         android:layout_width="wrap_content"
@@ -29,7 +28,7 @@
 
         <TextView
             android:id="@+id/energyHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_column="0"
             android:layout_columnWeight="1"
@@ -40,7 +39,7 @@
 
         <TextView
             android:id="@+id/fatHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_column="1"
             android:layout_columnWeight="1"
@@ -51,7 +50,7 @@
 
         <TextView
             android:id="@+id/saturatesHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_column="2"
             android:layout_columnWeight="1"
@@ -62,7 +61,7 @@
 
         <TextView
             android:id="@+id/carbHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_column="3"
             android:layout_columnWeight="1"
@@ -73,7 +72,7 @@
 
         <TextView
             android:id="@+id/sugarHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_column="4"
             android:layout_columnWeight="1"
@@ -84,7 +83,7 @@
 
         <TextView
             android:id="@+id/fibreHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_column="5"
             android:layout_columnWeight="1"
@@ -95,7 +94,7 @@
 
         <TextView
             android:id="@+id/proteinHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_column="6"
             android:layout_columnWeight="1"
@@ -106,7 +105,7 @@
 
         <TextView
             android:id="@+id/saltHeader"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_column="7"
             android:layout_columnWeight="1"

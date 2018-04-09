@@ -32,4 +32,6 @@
     <string name="add_to_basket">ADD TO BASKET</string>
     <string name="recommended_days">Recommended Days:</string>
     <string name="_0">0</string>
+    <string name="placeHolderMain">-</string>
+    <string name="new_item">NEW ITEM</string>
 </resources>

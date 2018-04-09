@@ -17,6 +17,7 @@ public class FoodItem implements Parcelable {
     private Nutrient[] mNutrients;
     private boolean mIsFood;
     private double mWeight;
+    private final double KJTOKCAL = 0.239006;
 
     private String[] NUTRIENT_NAMES = {
             "Energy (kJ)",
@@ -64,8 +65,9 @@ public class FoodItem implements Parcelable {
         for (int i = 0; i < NUTRIENT_NAMES.length; i++) {
             String name = nutrientJSON.getJSONObject(i).getString("name");
             if(name.equals("Energy (kcal)")){
-                double valuePer100 = Double.parseDouble(nutrientJSON.getJSONObject(i-1).getString("valuePer100"))*0.239006;
-                double valuePerServing = Double.parseDouble(nutrientJSON.getJSONObject(i-1).getString("valuePerServing"))*0.239006;
+                JSONObject current = nutrientJSON.getJSONObject(i-1);
+                double valuePer100 = Double.parseDouble(current.getString("valuePer100"))*KJTOKCAL;
+                double valuePerServing = Double.parseDouble(current.getString("valuePerServing"))*KJTOKCAL;
                 mNutrients[i] = new Nutrient(name, valuePer100, valuePerServing);
             }else {
                 double valuePer100 = Double.parseDouble(nutrientJSON.getJSONObject(i).getString("valuePer100"));

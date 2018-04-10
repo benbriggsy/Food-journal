@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.benbriggs.food_journal.R;
+import com.example.benbriggs.food_journal.user.Basket;
 import com.example.benbriggs.food_journal.user.FoodItem;
 
 import java.util.ArrayList;
@@ -19,10 +20,12 @@ import static android.content.ContentValues.TAG;
  */
 
 public class MainProductAdapter extends RecyclerView.Adapter<MainProductAdapter.MainProductViewHolder>{
+    private Basket mBasket;
     private ArrayList<FoodItem> mFoodItems;
 
-    public MainProductAdapter(ArrayList<FoodItem> foodItems){
-        mFoodItems = foodItems;
+    public MainProductAdapter(Basket Basket){
+        mBasket = Basket;
+        mFoodItems = mBasket.getProducts();
     }
 
     @Override
@@ -43,18 +46,25 @@ public class MainProductAdapter extends RecyclerView.Adapter<MainProductAdapter.
         return mFoodItems.size();
     }
 
-    public class MainProductViewHolder extends RecyclerView.ViewHolder {
+    public class MainProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView mProductName;
 
         public MainProductViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             mProductName = (TextView) itemView.findViewById(R.id.listMainProductName);
         }
 
         public void bindFoodItem(FoodItem foodItem){
             Log.v(TAG, "entered bindHole");
             mProductName.setText(foodItem.getProductName());
+        }
+
+        @Override
+        public void onClick(View view) {
+            //mFoodItems.remove(getAdapterPosition());
+            Log.v("clicked item", String.valueOf(getAdapterPosition()));
         }
     }
 }

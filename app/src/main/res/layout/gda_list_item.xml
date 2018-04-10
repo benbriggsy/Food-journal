@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="@string/recommended_days"/>
+        android:layout_marginBottom="10dp"
+        android:text="@string/recommended_days"
+        />
 
     <GridLayout
         android:id="@+id/grid"
@@ -34,8 +36,10 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="0"
+            android:background="@drawable/rounded_corners"
             android:text="@string/energy"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/fatHeader"
@@ -45,8 +49,10 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="0"
+            android:background="@drawable/rounded_corners"
             android:text="@string/fat"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/saturatesHeader"
@@ -56,8 +62,10 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="0"
+            android:background="@drawable/rounded_corners"
             android:text="@string/saturates"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/carbHeader"
@@ -67,8 +75,10 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="0"
+            android:background="@drawable/rounded_corners"
             android:text="@string/carbohydrate"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/sugarHeader"
@@ -78,8 +88,10 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="0"
+            android:background="@drawable/rounded_corners"
             android:text="@string/sugar"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/fibreHeader"
@@ -89,8 +101,10 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="0"
+            android:background="@drawable/rounded_corners"
             android:text="@string/fibre"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/proteinHeader"
@@ -100,8 +114,10 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="0"
+            android:background="@drawable/rounded_corners"
             android:text="@string/protein"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/saltHeader"
@@ -111,95 +127,113 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="0"
+            android:background="@drawable/last_top"
             android:text="@string/salt"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/energyValue"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_column="0"
             android:layout_columnWeight="1"
             android:layout_row="1"
-            android:text="@string/energy"
+            android:gravity="center"
+            android:text="@string/placeHolderMain"
+            android:textStyle="bold"
             android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/fatValue"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_column="1"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="1"
-            android:text="@string/fat"
-            android:textAlignment="center"/>
+            android:gravity="center"
+            android:text="@string/placeHolderMain"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/saturatesValue"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_column="2"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="1"
-            android:text="@string/saturates"
-            android:textAlignment="center"/>
+            android:gravity="center"
+            android:text="@string/placeHolderMain"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/carbValue"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_column="3"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="1"
-            android:text="@string/carbohydrate"
-            android:textAlignment="center"/>
+            android:gravity="center"
+            android:text="@string/placeHolderMain"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/sugarValue"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_column="4"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="1"
-            android:text="@string/sugar"
-            android:textAlignment="center"/>
+            android:gravity="center"
+            android:text="@string/placeHolderMain"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/fibreValue"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_column="5"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="1"
-            android:text="@string/fibre"
-            android:textAlignment="center"/>
+            android:gravity="center"
+            android:text="@string/placeHolderMain"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/proteinValue"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_column="6"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="1"
-            android:text="@string/protein"
-            android:textAlignment="center"/>
+            android:gravity="center"
+            android:text="@string/placeHolderMain"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/saltValue"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_column="7"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_row="1"
-            android:text="@string/salt"
-            android:textAlignment="center"/>
+            android:gravity="center"
+            android:text="@string/placeHolderMain"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
     </GridLayout>
 
     <TextView
@@ -207,14 +241,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/daysLabel"
         android:text="@string/_0"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@+id/grid"
         android:layout_height="5dp"
+        android:layout_below="@+id/grid"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="6dp"
         android:background="?android:attr/listDivider"/>
 </RelativeLayout>

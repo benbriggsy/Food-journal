@@ -88,7 +88,7 @@ public class Basket implements Parcelable {
     }
 
     public void addFoodItem(FoodItem foodItem){
-        mProducts.add(foodItem);
+        mProducts.add(0,foodItem);
     }
 
     public void calcALL(){

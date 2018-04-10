@@ -17,8 +17,8 @@
 package com.example.benbriggs.food_journal;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void RefreshRecyclerView(){
-        MainProductAdapter adapter = new MainProductAdapter(mBasket.getProducts());
+        MainProductAdapter adapter = new MainProductAdapter(mBasket);
         mRecyclerView.setAdapter(adapter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -311,14 +311,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void fillInfo(TextView tv, double percentage){
-        tv.setText(Math.round(percentage) + "%");
 
-        if(Math.abs(percentage - 100) <= 10){
-            tv.setBackgroundColor(Color.GREEN);
-        }else if(Math.abs(percentage - 100) <= 20){
-            tv.setBackgroundColor(Color.YELLOW);
+        tv.setText(Math.round(percentage) + "%");
+        if(tv.equals(mPercentageSalt)){
+            if(Math.abs(percentage - 100) <= 10){
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_green));
+            }else if(Math.abs(percentage - 100) <= 20){
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_amber));
+            }else{
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_red));
+            }
         }else{
-            tv.setBackgroundColor(Color.RED);
+            if(Math.abs(percentage - 100) <= 10){
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.green_corner));
+            }else if(Math.abs(percentage - 100) <= 20){
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.amber_corner));
+            }else{
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.red_corner));
+            }
         }
     }
 }

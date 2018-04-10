@@ -285,12 +285,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void RefreshRecyclerView(){
-        MainProductAdapter adapter = new MainProductAdapter(mBasket);
+        MainProductAdapter adapter = new MainProductAdapter(mBasket, this, this);
         mRecyclerView.setAdapter(adapter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+    }
+
+    public void removeScannedItem(int index){
+        mBasket.removeFoodItem(index);
+        RefreshRecyclerView();
+        RefreshNutrition();
     }
 
     public void RefreshNutrition(){

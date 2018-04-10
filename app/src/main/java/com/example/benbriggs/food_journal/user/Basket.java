@@ -91,6 +91,11 @@ public class Basket implements Parcelable {
         mProducts.add(0,foodItem);
     }
 
+    public void removeFoodItem(int i){
+        mProducts.remove(i);
+        calcALL();
+    }
+
     public void calcALL(){
         calculateTotals();
         calcRecommendedDays();

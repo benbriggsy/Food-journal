@@ -34,4 +34,11 @@
     <string name="_0">0</string>
     <string name="placeHolderMain">-</string>
     <string name="new_item">NEW ITEM</string>
+    <string name="peopleLabel">People:</string>
+    <string name="_1">1</string>
+    <string name="date">date</string>
+    <string name="date_value">Date:</string>
+    <string name="error">ERROR</string>
+    <string name="people">#people</string>
+    <string name="title_activity_basket">BasketActivity</string>
 </resources>

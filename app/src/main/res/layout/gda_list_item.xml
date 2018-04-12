@@ -252,4 +252,39 @@
         android:layout_marginBottom="5dp"
         android:layout_marginTop="6dp"
         android:background="?android:attr/listDivider"/>
+
+    <TextView
+        android:id="@+id/noPeopleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/daysValue"
+        android:text="@string/peopleLabel"/>
+
+    <TextView
+        android:id="@+id/numberOfpeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/noPeopleLabel"
+        android:text="@string/_1"/>
+
+    <TextView
+        android:id="@+id/dateValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:text="@string/date"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/dateValue"
+        android:text="@string/date_value"/>
 </RelativeLayout>

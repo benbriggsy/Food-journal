@@ -3,6 +3,8 @@ package com.example.benbriggs.food_journal.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -37,6 +39,7 @@ public class Basket implements Parcelable {
     private double mRecommendedDays;
 
     private Date mDate;
+    private String mDateAsString;
 
     private String[] NUTRIENT_NAMES = {
             "Energy (kJ)",
@@ -68,6 +71,9 @@ public class Basket implements Parcelable {
         mWeightOrVolume     = 0;
         mDays               = 0;
         mNoPeople           = 1;
+        mDate               = new Date();
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        mDateAsString = df.format(mDate);
     }
 
     public Basket(int noPeople) {
@@ -85,10 +91,13 @@ public class Basket implements Parcelable {
         mWeightOrVolume     = 0;
         mDays               = 0;
         mNoPeople           = noPeople;
+        mDate               = new Date();
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        mDateAsString = df.format(mDate);
     }
 
     public void addFoodItem(FoodItem foodItem){
-        mProducts.add(0,foodItem);
+        mProducts.add(0, foodItem);
     }
 
     public void removeFoodItem(int i){
@@ -242,6 +251,22 @@ public class Basket implements Parcelable {
         return mProducts;
     }
 
+    public int getNoPeople() {
+        return mNoPeople;
+    }
+
+    public void setNoPeople(int noPeople) {
+        mNoPeople = noPeople;
+    }
+
+    public String getDateAsString() {
+        return mDateAsString;
+    }
+
+    public void setDateAsString(String dateAsString) {
+        mDateAsString = dateAsString;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -270,6 +295,8 @@ public class Basket implements Parcelable {
         dest.writeDouble(this.mTotalGandML);
         dest.writeDouble(this.mWeightOrVolume);
         dest.writeInt(this.mDays);
+        dest.writeInt(this.mNoPeople);
+        dest.writeString(this.mDateAsString);
         dest.writeDouble(this.mRecommendedDays);
         dest.writeStringArray(this.NUTRIENT_NAMES);
     }
@@ -296,6 +323,8 @@ public class Basket implements Parcelable {
         this.mTotalGandML = in.readDouble();
         this.mWeightOrVolume = in.readDouble();
         this.mDays = in.readInt();
+        this.mNoPeople = in.readInt();
+        this.mDateAsString = in.readString();
         this.mRecommendedDays = in.readDouble();
         this.NUTRIENT_NAMES = in.createStringArray();
     }

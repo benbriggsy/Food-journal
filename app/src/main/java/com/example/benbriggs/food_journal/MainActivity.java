@@ -23,8 +23,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +53,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     public TextView mPercentageEnergyCal;
     public TextView mPercentageFat;
     public TextView mPercentageSaturates;
@@ -61,11 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public TextView mPercentageProtein;
     public TextView mPercentageSalt;
 
-
     public TextView mDays;
+    public TextView mPeopleValue;
+    public EditText mPeopleInput;
 
-
-    // use a compound button so either checkbox or switch widgets work.
     private CompoundButton useFlash;
     private RecyclerView mRecyclerView;
     private String mJsonString;
@@ -81,13 +82,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         createBindings();
         setListeners();
 
         mUser = new User();
         mBasket = new Basket();
         mFileStorageController = new FileStorageController(mUser);
+
         try {
             mFileStorageController.readJSONString(mFileStorageController.readStorageFile(this.getApplicationContext()));
             mUser = mFileStorageController.getUser();
@@ -276,12 +277,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPercentageProtein      = findViewById(R.id.proteinValue);
         mPercentageSalt         = findViewById(R.id.saltValue);
         mDays                   = findViewById(R.id.daysValue);
+        mPeopleInput            = findViewById(R.id.peopleInput);
+        mPeopleValue            = findViewById(R.id.numberOfpeople);
     }
 
     private void setListeners(){
         findViewById(R.id.read_barcode).setOnClickListener(this);
         findViewById(R.id.save_basket).setOnClickListener(this);
         findViewById(R.id.historyButton).setOnClickListener(this);
+
+        mPeopleInput.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    if(!mPeopleInput.getText().toString().equals("")){
+                        mBasket.setNoPeople(Integer.parseInt(mPeopleInput.getText().toString()));
+                    }else{
+                        mBasket.setNoPeople(1);
+                    }
+                    mBasket.calcALL();
+                    RefreshRecyclerView();
+                    RefreshNutrition();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     public void RefreshRecyclerView(){
@@ -294,9 +316,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void removeScannedItem(int index){
-        mBasket.removeFoodItem(index);
-        RefreshRecyclerView();
-        RefreshNutrition();
+        if(mBasket.getProducts().size() > 0) {
+            mBasket.removeFoodItem(index);
+            RefreshRecyclerView();
+            RefreshNutrition();
+        }
     }
 
     public void RefreshNutrition(){
@@ -314,6 +338,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fillInfo(mPercentageSalt,           basket.getPercentageSalt());
 
         mDays.setText(Math.round(basket.getRecommendedDays()) + "");
+        mPeopleValue.setText(basket.getNoPeople() + "");
     }
 
     private void fillInfo(TextView tv, double percentage){
@@ -337,4 +362,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
 }

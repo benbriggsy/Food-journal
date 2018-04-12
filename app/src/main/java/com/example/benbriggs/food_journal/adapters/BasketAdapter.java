@@ -1,5 +1,6 @@
 package com.example.benbriggs.food_journal.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.benbriggs.food_journal.R;
+import com.example.benbriggs.food_journal.user.Basket;
 import com.example.benbriggs.food_journal.user.FoodItem;
 
 import java.util.ArrayList;
@@ -15,26 +17,28 @@ import java.util.ArrayList;
 import static android.content.ContentValues.TAG;
 
 /**
- * Created by benbriggs on 17/01/2018.
+ * Created by benbriggs on 11/04/2018.
  */
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
+public class BasketAdapter  extends RecyclerView.Adapter<BasketAdapter.BasketViewHolder>{
+    private Basket mBasket;
     private ArrayList<FoodItem> mFoodItems;
 
-    public HistoryAdapter(ArrayList<FoodItem> foodItems){
-        mFoodItems = foodItems;
+    public BasketAdapter(Basket Basket, Context context){
+        mBasket = Basket;
+        mFoodItems = mBasket.getProducts();
     }
 
     @Override
-    public HistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BasketAdapter.BasketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.history_list_item, parent, false);
-        HistoryViewHolder viewHolder = new HistoryViewHolder(view);
+                .inflate(R.layout.main_product_list_item, parent, false);
+        BasketAdapter.BasketViewHolder viewHolder = new BasketAdapter.BasketViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(HistoryViewHolder holder, int position) {
+    public void onBindViewHolder(BasketAdapter.BasketViewHolder holder, int position) {
         holder.bindFoodItem(mFoodItems.get(position));
     }
 
@@ -43,22 +47,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return mFoodItems.size();
     }
 
-    public class HistoryViewHolder extends RecyclerView.ViewHolder {
+    public class BasketViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView mIngredients;
         public TextView mProductName;
 
-        public HistoryViewHolder(View itemView) {
+        public BasketViewHolder(View itemView) {
             super(itemView);
-
-            mProductName = (TextView) itemView.findViewById(R.id.listProductName);
-            mIngredients = (TextView) itemView.findViewById(R.id.listIngredients);
-
+            mProductName = (TextView) itemView.findViewById(R.id.listMainProductName);
         }
 
         public void bindFoodItem(FoodItem foodItem){
             Log.v(TAG, "entered bindHole");
-            mIngredients.setText(foodItem.getNutrientString());
             mProductName.setText(foodItem.getProductName());
         }
     }

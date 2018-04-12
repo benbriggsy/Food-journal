@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 public class FileStorageController {
     User mUser;
-    private final String USER = "user2.json";
+    private final String USER = "use.json";
 
     private final String[] NUTRIENT_NAMES = {
             "Energy (kJ)",
@@ -58,12 +58,16 @@ public class FileStorageController {
         writeObjectToFile(root, ctxt);
     }
 
-    public JSONArray basketToJSON(Basket b){
-        JSONArray basket = new JSONArray();
+    public JSONObject basketToJSON(Basket b){
+        JSONObject basket = new JSONObject();
+        JSONArray basketItems = new JSONArray();
         for (FoodItem fi: b.getProducts()) {
             JSONObject jo = foodItemToJSON(fi);
-            basket.add(jo);
+            basketItems.add(jo);
         }
+        basket.put("date", b.getDateAsString());
+        basket.put("people", b.getNoPeople());
+        basket.put("products", basketItems);
         return basket;
     }
 
@@ -118,18 +122,20 @@ public class FileStorageController {
         if(innerBaskets != null){
             Iterator j = innerBaskets.iterator();
             while (j.hasNext()) {
-                JSONArray basketJSON = (JSONArray) j.next();
+                JSONObject basketJSON = (JSONObject) j.next();
+                JSONArray basketItemsJSON = (JSONArray) basketJSON.get("products");
                 Basket b = new Basket();
-                Iterator k = basketJSON.iterator();
+
+                Iterator k = basketItemsJSON.iterator();
                 while (k.hasNext()) {
                     JSONObject foodItemJSON = (JSONObject) k.next();
                     FoodItem foodItem = new FoodItem(foodItemJSON.get("product").toString(),
                             foodItemJSON.get("ingredients").toString(), JSONToNutrients((JSONArray)foodItemJSON.get("nutrients")), (Double) foodItemJSON.get("weight"));
                     b.addFoodItem(foodItem);
                 }
-                Log.d("basketTest", b.toString());
-                b.calcALL();
-                Log.d("basketTest", b.toString());
+                b.setDateAsString(basketJSON.get("date").toString());
+                b.setNoPeople(Integer.parseInt(basketJSON.get("people").toString()));
+                b.calcALL();;
                 mUser.addBasket(b);
             }
         }

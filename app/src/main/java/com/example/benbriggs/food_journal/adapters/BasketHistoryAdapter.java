@@ -1,14 +1,18 @@
 package com.example.benbriggs.food_journal.adapters;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.benbriggs.food_journal.BasketActivity;
 import com.example.benbriggs.food_journal.R;
 import com.example.benbriggs.food_journal.user.Basket;
+import com.example.benbriggs.food_journal.user.User;
 
 import java.util.ArrayList;
 
@@ -18,9 +22,13 @@ import java.util.ArrayList;
 
 public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdapter.BasketHistoryViewHolder> {
     private ArrayList<Basket> mBaskets;
+    private Context mContext;
+    private User mUser;
 
-    public BasketHistoryAdapter(ArrayList<Basket> baskets){
-        mBaskets = baskets;
+    public BasketHistoryAdapter(User user, Context context){
+        mBaskets = user.getBasketHistory();
+        mContext = context;
+        mUser    = user;
     }
 
     @Override
@@ -40,7 +48,7 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
             return mBaskets.size();
     }
 
-    public class BasketHistoryViewHolder extends RecyclerView.ViewHolder {
+    public class BasketHistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView mPercentageEnergyCal;
         public TextView mPercentageFat;
@@ -51,11 +59,13 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
         public TextView mPercentageProtein;
         public TextView mPercentageSalt;
 
-
+        public TextView mPeople;
+        public TextView mDate;
         public TextView mDays;
 
         public BasketHistoryViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
 
             mPercentageEnergyCal    = (TextView) itemView.findViewById(R.id.energyValue);
             mPercentageFat          = (TextView) itemView.findViewById(R.id.fatValue);
@@ -66,7 +76,9 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
             mPercentageProtein      = (TextView) itemView.findViewById(R.id.proteinValue);
             mPercentageSalt         = (TextView) itemView.findViewById(R.id.saltValue);
 
+            mPeople                 = (TextView) itemView.findViewById(R.id.numberOfpeople);
             mDays                   = (TextView) itemView.findViewById(R.id.daysValue);
+            mDate                   = (TextView) itemView.findViewById(R.id.dateValue);
 
         }
 
@@ -81,18 +93,38 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
             fillInfo(mPercentageSalt,           basket.getPercentageSalt());
 
             mDays.setText(Math.round(basket.getRecommendedDays()) + "");
+            mPeople.setText(basket.getNoPeople()+"");
+            mDate.setText(basket.getDateAsString());
         }
 
         private void fillInfo(TextView tv, double percentage){
             tv.setText(Math.round(percentage) + "%");
 
-            if(Math.abs(percentage - 100) <= 10){
-                tv.setBackgroundColor(Color.GREEN);
-            }else if(Math.abs(percentage - 100) <= 20){
-                tv.setBackgroundColor(Color.YELLOW);
+            if(tv.equals(mPercentageSalt)){
+                if(Math.abs(percentage - 100) <= 10){
+                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_green));
+                }else if(Math.abs(percentage - 100) <= 20){
+                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_amber));
+                }else{
+                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_red));
+                }
             }else{
-                tv.setBackgroundColor(Color.RED);
+                if(Math.abs(percentage - 100) <= 10){
+                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.green_corner));
+                }else if(Math.abs(percentage - 100) <= 20){
+                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.amber_corner));
+                }else{
+                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.red_corner));
+                }
             }
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(mContext, BasketActivity.class);
+            intent.putExtra("user", mUser);
+            intent.putExtra("basket", mUser.getBasketHistory().get(getAdapterPosition()));
+            mContext.startActivity(intent);
         }
     }
 }

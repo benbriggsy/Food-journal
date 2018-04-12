@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main">
+            android:label="Nutrient Calculator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -30,6 +30,11 @@
         <activity
             android:name=".HistoryActivity"
             android:label="@string/title_activity_history_activity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".BasketActivity"
+            android:label="@string/title_activity_basket"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

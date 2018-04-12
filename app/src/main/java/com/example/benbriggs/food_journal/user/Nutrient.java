@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by benbriggs on 31/01/2018.
  */
 
-class Nutrient implements Parcelable {
+public class Nutrient implements Parcelable {
     private String Name;
     private Double valuePer100;
     private Double valuePerServing;

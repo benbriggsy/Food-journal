@@ -25,7 +25,7 @@ public class User implements Parcelable{
     }
 
     public void addBasket(Basket basket){
-        mBasketHistory.add(basket);
+        mBasketHistory.add(0, basket);
 
         Log.v("User", "Amount of baskets: " + mBasketHistory.size());
     }

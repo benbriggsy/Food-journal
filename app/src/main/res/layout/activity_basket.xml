@@ -288,68 +288,12 @@
             android:background="?android:attr/listDivider"/>
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/read_barcode"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:text="@string/new_item"/>
-
-    <Button
-        android:id="@+id/save_basket"
-        android:layout_width="126dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/read_barcode"
-        android:layout_alignBottom="@+id/read_barcode"
-        android:layout_toEndOf="@+id/read_barcode"
-        android:text="@string/add_to_basket"/>
-
-    <Button
-        android:id="@+id/historyButton"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/save_basket"
-        android:layout_alignBottom="@+id/save_basket"
-        android:layout_toEndOf="@+id/save_basket"
-        android:text="@string/history"/>
-
-    <Switch
-        android:id="@+id/use_flash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/historyButton"
-        android:layout_alignEnd="@+id/mainRecycler"
-        android:layout_marginBottom="49dp"
-        android:checked="false"
-        android:text="@string/use_flash"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mainRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/use_flash"
-        android:layout_alignStart="@+id/errorMessage"
-        android:layout_below="@+id/rel"/>
+        android:layout_below="@+id/rel"
+        android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:id="@+id/errorMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/use_flash"
-        android:layout_alignStart="@+id/read_barcode"
-        android:text=" "/>
-
-    <EditText
-        android:id="@+id/peopleInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/historyButton"
-        android:layout_alignStart="@+id/use_flash"
-        android:ems="10"
-        android:hint="@string/people"
-        android:inputType="number"
-        android:imeOptions="actionSend"
-        android:textAlignment="center"
-        android:textColorLink="@color/common_plus_signin_btn_text_light_disabled"/>
 </RelativeLayout>
+

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.example.benbriggs.food_journal.adapters.BasketHistoryAdapter;
 import com.example.benbriggs.food_journal.user.User;
@@ -27,9 +26,7 @@ public class HistoryActivity  extends AppCompatActivity {
         Intent intent = getIntent();
         User user = intent.getParcelableExtra("user");
 
-        Log.v("HistoryActivity", "entered bindHole " + user.getBasketHistory());
-
-        BasketHistoryAdapter adapter = new BasketHistoryAdapter(user.getBasketHistory());
+        BasketHistoryAdapter adapter = new BasketHistoryAdapter(user, this);
         mRecyclerView.setAdapter(adapter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

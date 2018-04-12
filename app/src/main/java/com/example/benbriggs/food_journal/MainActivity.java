@@ -18,12 +18,15 @@ package com.example.benbriggs.food_journal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,9 +53,20 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    public TextView mPercentageEnergyCal;
+    public TextView mPercentageFat;
+    public TextView mPercentageSaturates;
+    public TextView mPercentageCarbohydrate;
+    public TextView mPercentageSugars;
+    public TextView mPercentageFibre;
+    public TextView mPercentageProtein;
+    public TextView mPercentageSalt;
 
-    // use a compound button so either checkbox or switch widgets work.
+    public TextView mDays;
+    public TextView mPeopleValue;
+    public EditText mPeopleInput;
+
     private CompoundButton useFlash;
     private RecyclerView mRecyclerView;
     private String mJsonString;
@@ -68,13 +82,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         createBindings();
         setListeners();
 
         mUser = new User();
         mBasket = new Basket();
         mFileStorageController = new FileStorageController(mUser);
+
         try {
             mFileStorageController.readJSONString(mFileStorageController.readStorageFile(this.getApplicationContext()));
             mUser = mFileStorageController.getUser();
@@ -94,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .addHeader("Ocp-Apim-Subscription-Key", APIkey)
                 .build();
 
-        Log.v(TAG, "here we go...");
         okhttp3.Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -123,12 +136,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             @Override
                             public void run() {
-                                Log.v(TAG, mJsonString);
                                 try {
                                     newEntryScanned(mJsonString);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
+                                } catch (JSONException | IOException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -143,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void newEntryScanned(String jsonData) throws JSONException, IOException {
-        FoodItem foodItem = null;
+        FoodItem foodItem;
 
         try {
 
@@ -155,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFileStorageController.saveUserToFile(this.getApplicationContext());
 
             RefreshRecyclerView();
+            RefreshNutrition();
 
             Log.v("BASKET", mBasket.toString());
 
@@ -194,8 +205,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(intent, RC_BARCODE_CAPTURE);
         }
 
-        //add basket to user and view history
-        if (v.getId() == R.id.read_barcode2) {
+        //add basket to user
+        if (v.getId() == R.id.save_basket) {
             mBasket.setDate(new Date());
             mUser.addBasket(mBasket);
             try {
@@ -205,10 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             mBasket = new Basket();
             RefreshRecyclerView();
-            Intent intent = new Intent(this, HistoryActivity.class);
-            intent.putExtra("user", mUser);
-            Log.v(TAG, "hello");
-            startActivity(intent);
+            RefreshNutrition();
         }
     }
 
@@ -241,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     String gtin  = barcode.rawValue;
-                    Log.d(TAG, "Barcode readStorageFile: " + barcode.displayValue);
                     getTescoInfo(gtin);
                 } else {
                     //statusMessage.setText(R.string.barcode_failure);
@@ -258,23 +265,102 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void createBindings(){
-        useFlash = (CompoundButton) findViewById(R.id.use_flash);
-        mRecyclerView = (RecyclerView) findViewById(R.id.mainRecycler);
-        mErrorMessage = (TextView) findViewById(R.id.errorMessage);
+        useFlash                = findViewById(R.id.use_flash);
+        mRecyclerView           = findViewById(R.id.mainRecycler);
+        mErrorMessage           = findViewById(R.id.errorMessage);
+        mPercentageEnergyCal    = findViewById(R.id.energyValue);
+        mPercentageFat          = findViewById(R.id.fatValue);
+        mPercentageSaturates    = findViewById(R.id.saturatesValue);
+        mPercentageCarbohydrate = findViewById(R.id.carbValue);
+        mPercentageSugars       = findViewById(R.id.sugarValue);
+        mPercentageFibre        = findViewById(R.id.fibreValue);
+        mPercentageProtein      = findViewById(R.id.proteinValue);
+        mPercentageSalt         = findViewById(R.id.saltValue);
+        mDays                   = findViewById(R.id.daysValue);
+        mPeopleInput            = findViewById(R.id.peopleInput);
+        mPeopleValue            = findViewById(R.id.numberOfpeople);
     }
 
     private void setListeners(){
         findViewById(R.id.read_barcode).setOnClickListener(this);
-        findViewById(R.id.read_barcode2).setOnClickListener(this);
+        findViewById(R.id.save_basket).setOnClickListener(this);
         findViewById(R.id.historyButton).setOnClickListener(this);
+
+        mPeopleInput.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    if(!mPeopleInput.getText().toString().equals("")){
+                        mBasket.setNoPeople(Integer.parseInt(mPeopleInput.getText().toString()));
+                    }else{
+                        mBasket.setNoPeople(1);
+                    }
+                    mBasket.calcALL();
+                    RefreshRecyclerView();
+                    RefreshNutrition();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     public void RefreshRecyclerView(){
-        MainProductAdapter adapter = new MainProductAdapter(mBasket.getProducts());
+        MainProductAdapter adapter = new MainProductAdapter(mBasket, this, this);
         mRecyclerView.setAdapter(adapter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
     }
+
+    public void removeScannedItem(int index){
+        if(mBasket.getProducts().size() > 0) {
+            mBasket.removeFoodItem(index);
+            RefreshRecyclerView();
+            RefreshNutrition();
+        }
+    }
+
+    public void RefreshNutrition(){
+        bindBasket(mBasket);
+    }
+
+    public void bindBasket(Basket basket){
+        fillInfo(mPercentageEnergyCal,      basket.getPercentageEnergyCal());
+        fillInfo(mPercentageFat,            basket.getPercentageFat());
+        fillInfo(mPercentageSaturates,      basket.getPercentageSaturates());
+        fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate());
+        fillInfo(mPercentageSugars,         basket.getPercentageSugars());
+        fillInfo(mPercentageFibre,          basket.getPercentageFibre());
+        fillInfo(mPercentageProtein,        basket.getPercentageProtein());
+        fillInfo(mPercentageSalt,           basket.getPercentageSalt());
+
+        mDays.setText(Math.round(basket.getRecommendedDays()) + "");
+        mPeopleValue.setText(basket.getNoPeople() + "");
+    }
+
+    private void fillInfo(TextView tv, double percentage){
+
+        tv.setText(Math.round(percentage) + "%");
+        if(tv.equals(mPercentageSalt)){
+            if(Math.abs(percentage - 100) <= 10){
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_green));
+            }else if(Math.abs(percentage - 100) <= 20){
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_amber));
+            }else{
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_red));
+            }
+        }else{
+            if(Math.abs(percentage - 100) <= 10){
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.green_corner));
+            }else if(Math.abs(percentage - 100) <= 20){
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.amber_corner));
+            }else{
+                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.red_corner));
+            }
+        }
+    }
+
 }

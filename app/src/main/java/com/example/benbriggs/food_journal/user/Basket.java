@@ -53,6 +53,9 @@ public class Basket implements Parcelable {
             "Salt (g)"
     };
 
+    private int[] colours = new int[8]; //0 = green, 1 = orange, 2 = red
+
+
     private final double ENERGY = 2000, PROTEIN= 45, CARBS=230,
             SUGARS=90, FAT=70, SATURATES=20, FIBRE=24, SALT=6;
 
@@ -132,25 +135,57 @@ public class Basket implements Parcelable {
 
     private void calculatePercentages(){
         if(mDays == 0){
-            mPercentageEnergyCal    = ((mTotalEnergyCal/mRecommendedDays)/ENERGY) * 100;
-            mPercentageFat          = ((mTotalFat/mRecommendedDays)/FAT) * 100;
-            mPercentageSaturates    = ((mTotalSaturates/mRecommendedDays)/SATURATES) * 100;
-            mPercentageCarbohydrate = ((mTotalCarbohydrate/mRecommendedDays)/CARBS) * 100;
-            mPercentageSugars       = ((mTotalSugars/mRecommendedDays)/SUGARS) * 100;
-            mPercentageFibre        = ((mTotalFibre/mRecommendedDays)/FIBRE) * 100;
+            mPercentageEnergyCal    = calculateEnergyPercentage(mRecommendedDays);
+            mPercentageFat          = calculateFatsPercentage(mRecommendedDays);
+            mPercentageSaturates    = calculateSatsPercentage(mRecommendedDays);
+            mPercentageCarbohydrate = calculateCarbsPercentage(mRecommendedDays);
+            mPercentageSugars       = calculateSugarPercentage(mRecommendedDays);
+            mPercentageFibre        = calculateFibrePercentage(mRecommendedDays);
             mPercentageProtein      = ((mTotalProtein/mRecommendedDays)/PROTEIN) * 100;
-            mPercentageSalt         = ((mTotalSalt/mRecommendedDays)/SALT) * 100;
+            mPercentageSalt         = calculateSaltPercentage(mRecommendedDays);
         }
         if(mDays > 0){
-            mPercentageEnergyCal    = ((mTotalEnergyCal/mDays)/ENERGY) * 100;
-            mPercentageFat          = ((mTotalFat/mDays)/FAT) * 100;
-            mPercentageSaturates    = ((mTotalSaturates/mDays)/SATURATES) * 100;
-            mPercentageCarbohydrate = ((mTotalCarbohydrate/mDays)/CARBS) * 100;
-            mPercentageSugars       = ((mTotalSugars/mDays)/SUGARS) * 100;
-            mPercentageFibre        = ((mTotalFibre/mDays)/FIBRE) * 100;
-            mPercentageProtein      = ((mTotalProtein/mDays)/PROTEIN) * 100;
-            mPercentageSalt         = ((mTotalFat/mDays)/SALT) * 100;
+            mPercentageEnergyCal    = calculateEnergyPercentage(mDays);
+            mPercentageFat          = calculateFatsPercentage(mDays);
+            mPercentageSaturates    = calculateSatsPercentage(mDays);
+            mPercentageCarbohydrate = calculateCarbsPercentage(mDays);
+            mPercentageSugars       = calculateSugarPercentage(mDays);
+            mPercentageFibre        = calculateFibrePercentage(mDays);
+            mPercentageProtein      = ((mTotalProtein/mRecommendedDays)/PROTEIN) * 100;
+            mPercentageSalt         = calculateSaltPercentage(mDays);
         }
+    }
+
+    private double calculateEnergyPercentage(double days){
+        return ((mTotalEnergyCal/days)/ENERGY) * 100;
+    }
+
+    private double calculateFibrePercentage(double days){
+        return ((mTotalFibre/days)/FIBRE) * 100;
+    }
+
+    private double calculateSaltPercentage(double days){
+        return ((mTotalSalt/days)/SALT) * 100;
+    }
+
+    private double calculateSugarPercentage(double days){
+        double kcalInSugar = 4;
+        return ((mTotalSugars*kcalInSugar/days)/ENERGY) * 100;
+    }
+
+    private double calculateCarbsPercentage(double days){
+        double kcalInCarbs = 4;
+        return ((mTotalCarbohydrate*kcalInCarbs/days)/ENERGY) * 100;
+    }
+
+    private double calculateFatsPercentage(double days){
+        double kcalInFats = 9;
+        return ((mTotalFat*kcalInFats/days)/ENERGY) * 100;
+    }
+
+    private double calculateSatsPercentage(double days){
+        double kcalInSats = 9;
+        return ((mTotalSaturates*kcalInSats/days)/ENERGY) * 100;
     }
 
     private void calcRecommendedDays(){

@@ -53,7 +53,7 @@ public class Basket implements Parcelable {
             "Salt (g)"
     };
 
-    private int[] colours = new int[8]; //0 = green, 1 = orange, 2 = red
+    private int[] mColours = new int[8]; //0 = green, 1 = orange, 2 = red
 
 
     private final double ENERGY = 2000, PROTEIN= 45, CARBS=230,
@@ -77,6 +77,7 @@ public class Basket implements Parcelable {
         mDate               = new Date();
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         mDateAsString = df.format(mDate);
+        calculateColours();
     }
 
     public Basket(int noPeople) {
@@ -97,6 +98,7 @@ public class Basket implements Parcelable {
         mDate               = new Date();
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         mDateAsString = df.format(mDate);
+        calculateColours();
     }
 
     public void addFoodItem(FoodItem foodItem){
@@ -112,6 +114,7 @@ public class Basket implements Parcelable {
         calculateTotals();
         calcRecommendedDays();
         calculatePercentages();
+        calculateColours();
     }
 
     private void calculateTotals(){
@@ -188,6 +191,103 @@ public class Basket implements Parcelable {
         return ((mTotalSaturates*kcalInSats/days)/ENERGY) * 100;
     }
 
+//    private String[] NUTRIENT_NAMES = {
+//            "Energy (kJ)",
+//            "Energy (kcal)",
+//            "Fat (g)",
+//            "saturates (g)",
+//            "Carbohydrate (g)",
+//            "sugars (g)",
+//            "Fibre (g)",
+//            "Protein (g)",
+//            "Salt (g)"
+//    };
+
+    public void calculateColours(){
+        mColours[0] = calcEnergyColour();
+        mColours[1] = calcFatColour();
+        mColours[2] = calcSatColour();
+        mColours[3] = calcCarbColour();
+        mColours[4] = calcSugarColour();
+        mColours[5] = calcFibreColour();
+        mColours[6] = calcProteinColour();
+        mColours[7] = calcSaltColour();
+    }
+
+    private int calcSaltColour() {
+        if(mPercentageSalt <= 100){
+            return 0;
+        }else if(mPercentageSalt > 125){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
+    private int calcProteinColour() {
+        return 0;
+    }
+
+    private int calcFibreColour() {
+        if(mPercentageFibre >= 100){
+            return 0;
+        }else if(mPercentageFibre < 80){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
+    private int calcSugarColour() {
+        if(mPercentageSugars < 5){
+            return 0;
+        }else if(mPercentageSugars > 10){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
+    private int calcCarbColour() {
+        if(mPercentageCarbohydrate > 50){
+            return 0;
+        }else if(mPercentageCarbohydrate < 40){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
+    private int calcSatColour() {
+        if(mPercentageSaturates < 35){
+            return 0;
+        }else if(mPercentageSaturates > 40){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
+    private int calcFatColour() {
+        if(mPercentageSaturates < 35){
+            return 0;
+        }else if(mPercentageSaturates > 40){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
+    private int calcEnergyColour() {
+        if(mPercentageEnergyCal < 80){
+            return 1;
+        }else if(mPercentageEnergyCal > 100){
+            return 2;
+        }else{
+            return 0;
+        }
+    }
+
     private void calcRecommendedDays(){
         mRecommendedDays = ((mTotalEnergyCal / ENERGY) / mNoPeople);
         if(mRecommendedDays < 1){
@@ -240,6 +340,10 @@ public class Basket implements Parcelable {
 
     public void setDays(int days) {
         mDays = days;
+    }
+
+    public int[] getColours() {
+        return mColours;
     }
 
     public double getPercentageEnergyCal() {

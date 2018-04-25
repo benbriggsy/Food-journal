@@ -83,35 +83,37 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
         }
 
         public void bindBasket(Basket basket){
-            fillInfo(mPercentageEnergyCal,      basket.getPercentageEnergyCal());
-            fillInfo(mPercentageFat,            basket.getPercentageFat());
-            fillInfo(mPercentageSaturates,      basket.getPercentageSaturates());
-            fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate());
-            fillInfo(mPercentageSugars,         basket.getPercentageSugars());
-            fillInfo(mPercentageFibre,          basket.getPercentageFibre());
-            fillInfo(mPercentageProtein,        basket.getPercentageProtein());
-            fillInfo(mPercentageSalt,           basket.getPercentageSalt());
+            basket.calculateColours();
+            fillInfo(mPercentageEnergyCal,      basket.getPercentageEnergyCal(),0, basket);
+            fillInfo(mPercentageFat,            basket.getPercentageFat(),1, basket);
+            fillInfo(mPercentageSaturates,      basket.getPercentageSaturates(),2, basket);
+            fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate(),3, basket);
+            fillInfo(mPercentageSugars,         basket.getPercentageSugars(),4, basket);
+            fillInfo(mPercentageFibre,          basket.getPercentageFibre(),5, basket);
+            fillInfo(mPercentageProtein,        basket.getPercentageProtein(),6, basket);
+            fillInfo(mPercentageSalt,           basket.getPercentageSalt(),7, basket);
 
             mDays.setText(Math.round(basket.getRecommendedDays()) + "");
             mPeople.setText(basket.getNoPeople()+"");
             mDate.setText(basket.getDateAsString());
         }
 
-        private void fillInfo(TextView tv, double percentage){
-            tv.setText(Math.round(percentage) + "%");
+        private void fillInfo(TextView tv, double percentage, int index, Basket basket){
 
+            tv.setText(Math.round(percentage) + "%");
+            int colour = basket.getColours()[index];
             if(tv.equals(mPercentageSalt)){
-                if(Math.abs(percentage - 100) <= 10){
+                if(colour == 0){
                     tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_green));
-                }else if(Math.abs(percentage - 100) <= 20){
+                }else if(colour == 1){
                     tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_amber));
                 }else{
                     tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_red));
                 }
             }else{
-                if(Math.abs(percentage - 100) <= 10){
+                if(colour == 0){
                     tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.green_corner));
-                }else if(Math.abs(percentage - 100) <= 20){
+                }else if(colour == 1){
                     tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.amber_corner));
                 }else{
                     tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.red_corner));

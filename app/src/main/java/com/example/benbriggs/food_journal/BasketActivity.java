@@ -65,38 +65,41 @@ public class BasketActivity extends AppCompatActivity {
     }
 
     public void RefreshNutrition(){
+        mBasket.calculateColours();
         bindBasket(mBasket);
     }
 
     public void bindBasket(Basket basket){
-        fillInfo(mPercentageEnergyCal,      basket.getPercentageEnergyCal());
-        fillInfo(mPercentageFat,            basket.getPercentageFat());
-        fillInfo(mPercentageSaturates,      basket.getPercentageSaturates());
-        fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate());
-        fillInfo(mPercentageSugars,         basket.getPercentageSugars());
-        fillInfo(mPercentageFibre,          basket.getPercentageFibre());
-        fillInfo(mPercentageProtein,        basket.getPercentageProtein());
-        fillInfo(mPercentageSalt,           basket.getPercentageSalt());
+
+        fillInfo(mPercentageEnergyCal,      basket.getPercentageEnergyCal(),0);
+        fillInfo(mPercentageFat,            basket.getPercentageFat(),1);
+        fillInfo(mPercentageSaturates,      basket.getPercentageSaturates(),2);
+        fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate(),3);
+        fillInfo(mPercentageSugars,         basket.getPercentageSugars(),4);
+        fillInfo(mPercentageFibre,          basket.getPercentageFibre(),5);
+        fillInfo(mPercentageProtein,        basket.getPercentageProtein(),6);
+        fillInfo(mPercentageSalt,           basket.getPercentageSalt(),7);
 
         mDays.setText(Math.round(basket.getRecommendedDays()) + "");
         mPeopleValue.setText(basket.getNoPeople() + "");
     }
 
-    private void fillInfo(TextView tv, double percentage){
+    private void fillInfo(TextView tv, double percentage, int index){
 
         tv.setText(Math.round(percentage) + "%");
+        int colour = mBasket.getColours()[index];
         if(tv.equals(mPercentageSalt)){
-            if(Math.abs(percentage - 100) <= 10){
+            if(colour == 0){
                 tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_green));
-            }else if(Math.abs(percentage - 100) <= 20){
+            }else if(colour == 1){
                 tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_amber));
             }else{
                 tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_red));
             }
         }else{
-            if(Math.abs(percentage - 100) <= 10){
+            if(colour == 0){
                 tv.setBackground(ContextCompat.getDrawable(this, R.drawable.green_corner));
-            }else if(Math.abs(percentage - 100) <= 20){
+            }else if(colour == 1){
                 tv.setBackground(ContextCompat.getDrawable(this, R.drawable.amber_corner));
             }else{
                 tv.setBackground(ContextCompat.getDrawable(this, R.drawable.red_corner));

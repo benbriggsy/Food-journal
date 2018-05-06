@@ -90,7 +90,7 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
             fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate(),3, basket);
             fillInfo(mPercentageSugars,         basket.getPercentageSugars(),4, basket);
             fillInfo(mPercentageFibre,          basket.getPercentageFibre(),5, basket);
-            fillInfo(mPercentageProtein,        basket.getPercentageProtein(),6, basket);
+//            fillInfo(mPercentageProtein,        basket.getPercentageProtein(),6, basket);
             fillInfo(mPercentageSalt,           basket.getPercentageSalt(),7, basket);
 
             mDays.setText(Math.round(basket.getRecommendedDays()) + "");

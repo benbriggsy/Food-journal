@@ -2,7 +2,6 @@ package com.example.benbriggs.food_journal.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import com.example.benbriggs.food_journal.user.Basket;
 import com.example.benbriggs.food_journal.user.FoodItem;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by benbriggs on 08/02/2018.
@@ -64,14 +61,13 @@ public class MainProductAdapter extends RecyclerView.Adapter<MainProductAdapter.
         }
 
         public void bindFoodItem(FoodItem foodItem){
-            Log.v(TAG, "entered bindHole");
             mProductName.setText(foodItem.getProductName());
         }
 
         @Override
         public void onClick(View view) {
             //mFoodItems.remove(getAdapterPosition());
-            Toast.makeText(mContext, String.valueOf(getAdapterPosition()), Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "Item removed", Toast.LENGTH_SHORT).show();
             mMainActivity.removeScannedItem(getAdapterPosition());
         }
     }

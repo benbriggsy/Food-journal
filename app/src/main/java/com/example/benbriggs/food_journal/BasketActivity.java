@@ -77,7 +77,7 @@ public class BasketActivity extends AppCompatActivity {
         fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate(),3);
         fillInfo(mPercentageSugars,         basket.getPercentageSugars(),4);
         fillInfo(mPercentageFibre,          basket.getPercentageFibre(),5);
-        fillInfo(mPercentageProtein,        basket.getPercentageProtein(),6);
+//        fillInfo(mPercentageProtein,        basket.getPercentageProtein(),6);
         fillInfo(mPercentageSalt,           basket.getPercentageSalt(),7);
 
         mDays.setText(Math.round(basket.getRecommendedDays()) + "");

@@ -166,13 +166,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             RefreshRecyclerView();
             RefreshNutrition();
-
+            Toast.makeText(this, "Added successfully\nTap in list to remove", Toast.LENGTH_LONG).show();
             Log.v("BASKET", mBasket.toString());
 
         } catch (NotTescoOwnBrandException | NotFoodOrDrinkException e) {
 
-            mErrorMessage.setText(e.getMessage());
-            System.out.println(e.getMessage());
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+//            mErrorMessage.setText(e.getMessage());
+//            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }
@@ -217,6 +218,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mBasket = new Basket();
             RefreshRecyclerView();
             RefreshNutrition();
+            Toast.makeText(this, "Basket saved", Toast.LENGTH_LONG).show();
+
         }
     }
 
@@ -267,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void createBindings(){
         useFlash                = findViewById(R.id.use_flash);
         mRecyclerView           = findViewById(R.id.mainRecycler);
-        mErrorMessage           = findViewById(R.id.errorMessage);
+//        mErrorMessage           = findViewById(R.id.errorMessage);
         mPercentageEnergyCal    = findViewById(R.id.energyValue);
         mPercentageFat          = findViewById(R.id.fatValue);
         mPercentageSaturates    = findViewById(R.id.saturatesValue);
@@ -335,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fillInfo(mPercentageCarbohydrate,   basket.getPercentageCarbohydrate(),3);
         fillInfo(mPercentageSugars,         basket.getPercentageSugars(),4);
         fillInfo(mPercentageFibre,          basket.getPercentageFibre(),5);
-        fillInfo(mPercentageProtein,        basket.getPercentageProtein(),6);
+       // fillInfo(mPercentageProtein,        basket.getPercentageProtein(),6);
         fillInfo(mPercentageSalt,           basket.getPercentageSalt(),7);
 
         mDays.setText(Math.round(basket.getRecommendedDays()) + "");

@@ -9,7 +9,7 @@
     <string name="barcode_header">Click &quot;Read Barcode&quot; to read a barcode</string>
     <string name="read_barcode">Read Barcode</string>
     <string name="auto_focus">Auto Focus</string>
-    <string name="use_flash">Use Flash</string>
+    <string name="use_flash">Scan With Flash</string>
     <string name="barcode_success">Barcode read successfully</string>
     <string name="barcode_failure">No barcode captured</string>
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
@@ -21,7 +21,7 @@
     <string name="product_name">Product Name</string>
     <string name="ingredients">Ingredients</string>
     <string name="title_activity_history_activity">HistoryActivityActivity</string>
-    <string name="energy">Energ</string>
+    <string name="energy">Energy</string>
     <string name="fat">Fat</string>
     <string name="saturates">Sats</string>
     <string name="carbohydrate">Carbs</string>
@@ -39,6 +39,6 @@
     <string name="date">date</string>
     <string name="date_value">Date:</string>
     <string name="error">ERROR</string>
-    <string name="people">#people</string>
+    <string name="people">Add/Remove People</string>
     <string name="title_activity_basket">BasketActivity</string>
 </resources>

@@ -84,6 +84,8 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         super.onCreate(icicle);
         setContentView(R.layout.barcode_capture);
 
+
+
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
 
@@ -102,6 +104,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+        Toast.makeText(this, "Tap a rectangle to scan barcode", Toast.LENGTH_LONG).show();
 
 //        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
 //                Snackbar.LENGTH_LONG)

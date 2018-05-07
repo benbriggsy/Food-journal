@@ -17,9 +17,8 @@ import java.util.ArrayList;
 import static android.content.ContentValues.TAG;
 
 /**
- * Created by benbriggs on 11/04/2018.
+ * A class that handles the inflation of the list of products on the historical Basket screen
  */
-
 public class BasketAdapter  extends RecyclerView.Adapter<BasketAdapter.BasketViewHolder>{
     private Basket mBasket;
     private ArrayList<FoodItem> mFoodItems;

@@ -17,9 +17,8 @@ import com.example.benbriggs.food_journal.user.User;
 import java.util.ArrayList;
 
 /**
- * Created by benbriggs on 07/02/2018.
+ * A class that handles the inflation of the list of baskets on the Basket history screen
  */
-
 public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdapter.BasketHistoryViewHolder> {
     private ArrayList<Basket> mBaskets;
     private Context mContext;
@@ -67,21 +66,25 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mPercentageEnergyCal    = (TextView) itemView.findViewById(R.id.energyValue);
-            mPercentageFat          = (TextView) itemView.findViewById(R.id.fatValue);
-            mPercentageSaturates    = (TextView) itemView.findViewById(R.id.saturatesValue);
-            mPercentageCarbohydrate = (TextView) itemView.findViewById(R.id.carbValue);
-            mPercentageSugars       = (TextView) itemView.findViewById(R.id.sugarValue);
-            mPercentageFibre        = (TextView) itemView.findViewById(R.id.fibreValue);
-            mPercentageProtein      = (TextView) itemView.findViewById(R.id.proteinValue);
-            mPercentageSalt         = (TextView) itemView.findViewById(R.id.saltValue);
+            mPercentageEnergyCal    = itemView.findViewById(R.id.energyValue);
+            mPercentageFat          = itemView.findViewById(R.id.fatValue);
+            mPercentageSaturates    = itemView.findViewById(R.id.saturatesValue);
+            mPercentageCarbohydrate = itemView.findViewById(R.id.carbValue);
+            mPercentageSugars       = itemView.findViewById(R.id.sugarValue);
+            mPercentageFibre        = itemView.findViewById(R.id.fibreValue);
+//            mPercentageProtein      = itemView.findViewById(R.id.proteinValue);
+            mPercentageSalt         = itemView.findViewById(R.id.saltValue);
 
-            mPeople                 = (TextView) itemView.findViewById(R.id.numberOfpeople);
-            mDays                   = (TextView) itemView.findViewById(R.id.daysValue);
-            mDate                   = (TextView) itemView.findViewById(R.id.dateValue);
+            mPeople                 = itemView.findViewById(R.id.numberOfpeople);
+            mDays                   = itemView.findViewById(R.id.daysValue);
+            mDate                   = itemView.findViewById(R.id.dateValue);
 
         }
 
+        /**
+         * Sets the display and values for each nutrient
+         * @param basket - the basket to get the values from
+         */
         public void bindBasket(Basket basket){
             basket.calculateColours();
             fillInfo(mPercentageEnergyCal,      basket.getPercentageEnergyCal(),0, basket);
@@ -98,17 +101,26 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
             mDate.setText(basket.getDateAsString());
         }
 
+        /**
+         * Fills the information for a TextView and decides which color should be given to the
+         * background
+         * @param tv - the view to fill
+         * @param percentage - the value to fill tv with
+         * @param index - the index of the nutrient
+         */
         private void fillInfo(TextView tv, double percentage, int index, Basket basket){
-
             tv.setText(Math.round(percentage) + "%");
             int colour = basket.getColours()[index];
             if(tv.equals(mPercentageSalt)){
                 if(colour == 0){
-                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_green));
+                    tv.setBackground(ContextCompat.getDrawable(mContext,
+                            R.drawable.last_bottom_green));
                 }else if(colour == 1){
-                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_amber));
+                    tv.setBackground(ContextCompat.getDrawable(mContext,
+                            R.drawable.last_bottom_amber));
                 }else{
-                    tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.last_bottom_red));
+                    tv.setBackground(ContextCompat.getDrawable(mContext,
+                            R.drawable.last_bottom_red));
                 }
             }else{
                 if(colour == 0){
@@ -121,6 +133,11 @@ public class BasketHistoryAdapter extends RecyclerView.Adapter<BasketHistoryAdap
             }
         }
 
+
+        /**
+         * A method to allow a Basket in the list to be opened
+         * @param view - the view relating to the Basket that will be opened
+         */
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(mContext, BasketActivity.class);

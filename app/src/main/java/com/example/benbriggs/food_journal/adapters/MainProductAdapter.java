@@ -16,9 +16,8 @@ import com.example.benbriggs.food_journal.user.FoodItem;
 import java.util.ArrayList;
 
 /**
- * Created by benbriggs on 08/02/2018.
+ * A class that handles the inflation of the list of products on the main screen
  */
-
 public class MainProductAdapter extends RecyclerView.Adapter<MainProductAdapter.MainProductViewHolder>{
     private Basket mBasket;
     private ArrayList<FoodItem> mFoodItems;

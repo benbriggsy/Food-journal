@@ -4,15 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by benbriggs on 31/01/2018.
+ * A class to model a single nutrient for a FoodItem
  */
-
 public class Nutrient implements Parcelable {
     private String Name;
     private Double valuePer100;
     private Double valuePerServing;
 
-    public Nutrient(String name, Double valuePer100, Double valuePerServing) {
+    Nutrient(String name, Double valuePer100, Double valuePerServing) {
         Name = name;
         this.valuePer100 = valuePer100;
         this.valuePerServing = valuePerServing;
@@ -22,11 +21,11 @@ public class Nutrient implements Parcelable {
         return Name;
     }
 
-    public Double getValuePer100() {
+    Double getValuePer100() {
         return valuePer100;
     }
 
-    public Double getValuePerServing() {
+    Double getValuePerServing() {
         return valuePerServing;
     }
 
@@ -44,6 +43,11 @@ public class Nutrient implements Parcelable {
         return 0;
     }
 
+    /**
+     * Write object to parcelable to make it fast to pass between activities.
+     * @param dest
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.Name);
@@ -51,13 +55,13 @@ public class Nutrient implements Parcelable {
         dest.writeValue(this.valuePerServing);
     }
 
-    protected Nutrient(Parcel in) {
+    private Nutrient(Parcel in) {
         this.Name = in.readString();
         this.valuePer100 = (Double) in.readValue(Double.class.getClassLoader());
         this.valuePerServing = (Double) in.readValue(Double.class.getClassLoader());
     }
 
-    public static final Creator<Nutrient> CREATOR = new Creator<Nutrient>() {
+    static final Creator<Nutrient> CREATOR = new Creator<Nutrient>() {
         @Override
         public Nutrient createFromParcel(Parcel source) {
             return new Nutrient(source);

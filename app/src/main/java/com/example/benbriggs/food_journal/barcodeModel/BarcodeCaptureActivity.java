@@ -53,6 +53,9 @@ import java.io.IOException;
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
  * size, and ID of each barcode.
+ *
+ * Some (or all) of the code is adapted from Google's mobile vision API sample. the original can be found
+ * at: https://github.com/googlesamples/android-vision
  */
 public final class BarcodeCaptureActivity extends AppCompatActivity implements BarcodeGraphicTracker.BarcodeUpdateListener {
     private static final String TAG = "Barcode-reader";

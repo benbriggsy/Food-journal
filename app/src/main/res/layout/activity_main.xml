@@ -317,5 +317,6 @@
         android:imeOptions="actionSend"
         android:inputType="number"
         android:textAlignment="center"
+        android:textColorHint="@color/common_google_signin_btn_text_light_pressed"
         android:textColorLink="@color/common_plus_signin_btn_text_light_disabled"/>
 </RelativeLayout>

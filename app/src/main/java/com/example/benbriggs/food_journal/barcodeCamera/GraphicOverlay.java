@@ -44,6 +44,9 @@ import java.util.Vector;
  * <li>{@link Graphic#translateX(float)} and {@link Graphic#translateY(float)} adjust the coordinate
  * from the preview's coordinate system to the view coordinate system.</li>
  * </ol>
+ *
+ * Some (or all) of the code is adapted from Google's mobile vision API sample. the original can be found
+ * at: https://github.com/googlesamples/android-vision
  */
 public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private final Object mLock = new Object();

@@ -25,6 +25,9 @@ import com.google.android.gms.vision.barcode.Barcode;
 /**
  * Factory for creating a tracker and associated graphic to be associated with a new barcode.  The
  * multi-processor uses this factory to create barcode trackers as needed -- one for each barcode.
+ *
+ * Some (or all) of the code is adapted from Google's mobile vision API sample. the original can be found
+ * at: https://github.com/googlesamples/android-vision
  */
 public class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode> {
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;

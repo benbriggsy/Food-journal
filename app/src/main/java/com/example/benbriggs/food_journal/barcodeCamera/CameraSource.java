@@ -69,6 +69,9 @@ import java.util.Map;
  * <ul>
  * <li>android.permissions.CAMERA</li>
  * </ul>
+ *
+ * Some (or all) of the code is adapted from Google's mobile vision API sample. the original can be found
+ * at: https://github.com/googlesamples/android-vision
  */
 @SuppressWarnings("deprecation")
 public class CameraSource {

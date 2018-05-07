@@ -26,6 +26,9 @@ import com.google.android.gms.vision.barcode.Barcode;
 /**
  * Graphic instance for rendering barcode position, size, and ID within an associated graphic
  * overlay view.
+ *
+ * Some (or all) of the code is adapted from Google's mobile vision API sample. the original can be found
+ * at: https://github.com/googlesamples/android-vision
  */
 public class BarcodeGraphic extends GraphicOverlay.Graphic {
 

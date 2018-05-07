@@ -8,7 +8,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-
+/**
+ * A class to model a Basket which is a list of FoodItem objects, the class also deals with
+ * all calculations to do with the aggregation of nutritional information in the Basket
+ */
 public class Basket implements Parcelable {
     private ArrayList<FoodItem> mProducts;
 
@@ -55,10 +58,13 @@ public class Basket implements Parcelable {
 
     private int[] mColours = new int[8]; //0 = green, 1 = orange, 2 = red
 
-
+    // the government guidelines for each nutrient
     private final double ENERGY = 2000, PROTEIN= 45, CARBS=230,
             SUGARS=90, FAT=70, SATURATES=20, FIBRE=24, SALT=6;
 
+    /**
+     * Creates a new empty Basket
+     */
     public Basket() {
         mProducts           = new ArrayList<>();
         mTotalEnergy        = 0;
@@ -80,27 +86,6 @@ public class Basket implements Parcelable {
         calculateColours();
     }
 
-    public Basket(int noPeople) {
-        mProducts           = new ArrayList<>();
-        mTotalEnergy        = 0;
-        mTotalEnergyCal     = 0;
-        mTotalFat           = 0;
-        mTotalSaturates     = 0;
-        mTotalCarbohydrate  = 0;
-        mTotalSugars        = 0;
-        mTotalFibre         = 0;
-        mTotalProtein       = 0;
-        mTotalSalt          = 0;
-        mTotalGandML        = 0;
-        mWeightOrVolume     = 0;
-        mDays               = 0;
-        mNoPeople           = noPeople;
-        mDate               = new Date();
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        mDateAsString = df.format(mDate);
-        calculateColours();
-    }
-
     public void addFoodItem(FoodItem foodItem){
         mProducts.add(0, foodItem);
     }
@@ -110,6 +95,9 @@ public class Basket implements Parcelable {
         calcALL();
     }
 
+    /**
+     * Calculates all values related to the advice given for this basket
+     */
     public void calcALL(){
         calculateTotals();
         calcRecommendedDays();
@@ -117,6 +105,9 @@ public class Basket implements Parcelable {
         calculateColours();
     }
 
+    /**
+     * Calculates the total of each nutrient in the basket and the total weight
+     */
     private void calculateTotals(){
         setValuesToZero();
         for (FoodItem fi: mProducts) {
@@ -136,6 +127,9 @@ public class Basket implements Parcelable {
         }
     }
 
+    /**
+     * Calculates the percentage to be displayed for the basket.
+     */
     private void calculatePercentages(){
         if(mDays == 0){
             mPercentageEnergyCal    = calculateEnergyPercentage(mRecommendedDays);
@@ -191,18 +185,10 @@ public class Basket implements Parcelable {
         return ((mTotalSaturates*kcalInSats/days)/ENERGY) * 100;
     }
 
-//    private String[] NUTRIENT_NAMES = {
-//            "Energy (kJ)",
-//            "Energy (kcal)",
-//            "Fat (g)",
-//            "saturates (g)",
-//            "Carbohydrate (g)",
-//            "sugars (g)",
-//            "Fibre (g)",
-//            "Protein (g)",
-//            "Salt (g)"
-//    };
-
+    /**
+     * Calculates the background colour that each nutrient should be with the current contents of
+     * the Basket. Each nutrient has its own calculation based on advice given by a Dietician
+     */
     public void calculateColours(){
         mColours[0] = calcEnergyColour();
         mColours[1] = calcFatColour();
@@ -288,11 +274,15 @@ public class Basket implements Parcelable {
         }
     }
 
+    /**
+     * Calculate how many days a basket should be for.
+     */
     private void calcRecommendedDays(){
         mRecommendedDays = ((mTotalEnergyCal / ENERGY) / mNoPeople);
         if(mRecommendedDays < 1){
             mRecommendedDays = 1;
         }
+        // if the energy is more than 50% the recommended amount
         if(mRecommendedDays - ((int)mRecommendedDays) > 0.5){
             mRecommendedDays = mRecommendedDays + 1;
         }
@@ -411,6 +401,11 @@ public class Basket implements Parcelable {
         return 0;
     }
 
+    /**
+     * Write object to parcelable to make it fast to pass between activities.
+     * @param dest
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.mProducts);

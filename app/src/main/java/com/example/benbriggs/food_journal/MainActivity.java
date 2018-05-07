@@ -1,19 +1,3 @@
-/*
- * Copyright (C) The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.benbriggs.food_journal;
 
 import android.content.Intent;
@@ -52,7 +36,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-
+/**
+ * A class that controls the opening screen, allows for input of new products through the scanning
+ * of barcodes. The class also makes call to the Tesco Labs API
+ *
+ * Some (or all) of the code is adapted from Google's mobile vision API sample. the original can be found
+ * at: https://github.com/googlesamples/android-vision
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     public TextView mPercentageEnergyCal;
     public TextView mPercentageFat;
@@ -71,13 +61,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView mRecyclerView;
     private String mJsonString;
     private User mUser;
-    private TextView mErrorMessage;
     private Basket mBasket;
     private FileStorageController mFileStorageController;
 
     private static final int RC_BARCODE_CAPTURE = 9001;
     private static final String TAG = "BarcodeMain";
+    private int mIndex;
 
+    /**
+     * Method is run when the application is opened, sets up the page and loads the historical data
+     * into user
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,16 +85,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFileStorageController = new FileStorageController(mUser);
 
         try {
-            mFileStorageController.readJSONString(mFileStorageController.readStorageFile(this.getApplicationContext()));
+            mFileStorageController.readJSONString(mFileStorageController
+                    .readStorageFile(this.getApplicationContext()));
             mUser = mFileStorageController.getUser();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
-    private void getTescoInfo(String gtin) {
+    /**
+     * Given a barcode the method makes an asynchronous call to the Tesco Labs API and sets
+     * mJsonString to the response
+     * @param barcode - the given barcode
+     */
+    private void getTescoInfo(String barcode) {
         String APIkey = "07cd78ffe44d46abb15cdbbbd7d1bc4d";
-        String forecastURL = "https://dev.tescolabs.com/product/" +  "?gtin=" + gtin;
+        String forecastURL = "https://dev.tescolabs.com/product/" +  "?gtin=" + barcode;
 
         OkHttpClient client = new OkHttpClient();
 
@@ -152,6 +153,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * A method that takes a JSON response from the Tesco Labs API and creates a new FoodItem,
+     * which is added to the current basket and the user's overall history. The current basket
+     * is also updated
+     * @param jsonData - the response for a specific Tesco product
+     * @throws JSONException
+     * @throws IOException
+     */
     private void newEntryScanned(String jsonData) throws JSONException, IOException {
         FoodItem foodItem;
 
@@ -166,22 +175,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             RefreshRecyclerView();
             RefreshNutrition();
-            Toast.makeText(this, "Added successfully\nTap in list to remove", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Added successfully\nTap in list to remove",
+                    Toast.LENGTH_LONG).show();
             Log.v("BASKET", mBasket.toString());
 
         } catch (NotTescoOwnBrandException | NotFoodOrDrinkException e) {
 
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-//            mErrorMessage.setText(e.getMessage());
-//            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
-     * Called when a view has been clicked.
+     * Called when a view has been clicked
      *
-     * @param v The view that was clicked.
+     * @param v The view that was clicked
      */
     @Override
     public void onClick(View v) {
@@ -254,8 +262,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String gtin  = barcode.rawValue;
                     getTescoInfo(gtin);
                 } else {
-                    //statusMessage.setText(R.string.barcode_failure);
-                    Toast.makeText(this, "No barcode captured", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No barcode captured",
+                            Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "No barcode captured, intent data is null");
                 }
             } else {
@@ -267,23 +275,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Creates the bindings between the XML views and their relevant field variables
+     */
     private void createBindings(){
         useFlash                = findViewById(R.id.use_flash);
         mRecyclerView           = findViewById(R.id.mainRecycler);
-//        mErrorMessage           = findViewById(R.id.errorMessage);
         mPercentageEnergyCal    = findViewById(R.id.energyValue);
         mPercentageFat          = findViewById(R.id.fatValue);
         mPercentageSaturates    = findViewById(R.id.saturatesValue);
         mPercentageCarbohydrate = findViewById(R.id.carbValue);
         mPercentageSugars       = findViewById(R.id.sugarValue);
         mPercentageFibre        = findViewById(R.id.fibreValue);
-        mPercentageProtein      = findViewById(R.id.proteinValue);
+//        mPercentageProtein      = findViewById(R.id.proteinValue);
         mPercentageSalt         = findViewById(R.id.saltValue);
         mDays                   = findViewById(R.id.daysValue);
         mPeopleInput            = findViewById(R.id.peopleInput);
         mPeopleValue            = findViewById(R.id.numberOfpeople);
     }
 
+    /**
+     * Sets listeners that are activated when the relevant view is clicked
+     */
     private void setListeners(){
         findViewById(R.id.read_barcode).setOnClickListener(this);
         findViewById(R.id.save_basket).setOnClickListener(this);
@@ -309,6 +322,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * Updates the recycler view to add or remove items from the list
+     */
     public void RefreshRecyclerView(){
         MainProductAdapter adapter = new MainProductAdapter(mBasket, this, this);
         mRecyclerView.setAdapter(adapter);
@@ -318,7 +334,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRecyclerView.setHasFixedSize(true);
     }
 
+    /**
+     * Removes an item from the list of scanned items given the index of the item to be removed
+     * @param index - the index of the item to be removed
+     */
     public void removeScannedItem(int index){
+        mIndex = index;
         if(mBasket.getProducts().size() > 0) {
             mBasket.removeFoodItem(index);
             RefreshRecyclerView();
@@ -326,11 +347,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Updates the percentages for each nutrient
+     */
     public void RefreshNutrition(){
         mBasket.calculateColours();
         bindBasket(mBasket);
     }
 
+    /**
+     * Sets the display and values for each nutrient
+     * @param basket - the basket to get the values from
+     */
     public void bindBasket(Basket basket){
         fillInfo(mPercentageEnergyCal,      basket.getPercentageEnergyCal(),0);
         fillInfo(mPercentageFat,            basket.getPercentageFat(),1);
@@ -345,17 +373,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPeopleValue.setText(basket.getNoPeople() + "");
     }
 
+    /**
+     * Fills the information for a TextView and decides which color should be given to the
+     * background
+     * @param tv - the view to fill
+     * @param percentage - the value to fill tv with
+     * @param index - the index of the nutrient
+     */
     private void fillInfo(TextView tv, double percentage, int index){
 
         tv.setText(Math.round(percentage) + "%");
         int colour = mBasket.getColours()[index];
         if(tv.equals(mPercentageSalt)){
             if(colour == 0){
-                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_green));
+                tv.setBackground(ContextCompat.getDrawable(this,
+                        R.drawable.last_bottom_green));
             }else if(colour == 1){
-                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_amber));
+                tv.setBackground(ContextCompat.getDrawable(this,
+                        R.drawable.last_bottom_amber));
             }else{
-                tv.setBackground(ContextCompat.getDrawable(this, R.drawable.last_bottom_red));
+                tv.setBackground(ContextCompat.getDrawable(this,
+                        R.drawable.last_bottom_red));
             }
         }else{
             if(colour == 0){

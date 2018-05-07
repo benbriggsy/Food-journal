@@ -29,6 +29,12 @@ import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;
 
+/**
+ *
+ *
+ * Some (or all) of the code is adapted from Google's mobile vision API sample. the original can be found
+ * at: https://github.com/googlesamples/android-vision
+ */
 public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
 

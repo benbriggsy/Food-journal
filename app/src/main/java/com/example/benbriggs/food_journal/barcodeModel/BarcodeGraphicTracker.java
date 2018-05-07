@@ -28,6 +28,9 @@ import com.google.android.gms.vision.barcode.Barcode;
  * any type of item).  This is used to receive newly detected items, add a graphical representation
  * to an overlay, update the graphics as the item changes, and remove the graphics when the item
  * goes away.
+ *
+ * Some (or all) of the code is adapted from Google's mobile vision API sample. the original can be found
+ * at: https://github.com/googlesamples/android-vision
  */
 public class BarcodeGraphicTracker extends Tracker<Barcode> {
     private GraphicOverlay<BarcodeGraphic> mOverlay;

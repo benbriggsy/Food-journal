@@ -10,12 +10,16 @@ import com.example.benbriggs.food_journal.adapters.BasketHistoryAdapter;
 import com.example.benbriggs.food_journal.user.User;
 
 /**
- * Created by benbriggs on 17/01/2018.
+ * Class to control the Basket history screen
  */
-
 public class HistoryActivity  extends AppCompatActivity {
     private RecyclerView mRecyclerView;
 
+    /**
+     * The method that instantiates the class by setting the view and creating a list of saved
+     * Baskets
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

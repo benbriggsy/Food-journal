@@ -10,12 +10,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * A class to model a FoodItem that has a list of ingredients, a list of nutrients and a product
+ * name
+ */
 public class FoodItem implements Parcelable {
     private String mProductName;
     private ArrayList<String> mIngredients;
     private Date mTimeAdded;
     private Nutrient[] mNutrients;
-    private boolean mIsFood;
     private double mWeight;
     private final double KJTOKCAL = 0.239006;
 
@@ -31,7 +34,15 @@ public class FoodItem implements Parcelable {
             "Salt (g)"
     };
 
-    public FoodItem(String jsonData) throws JSONException, NotFoodOrDrinkException, NotTescoOwnBrandException {
+    /**
+     * Creates a FoodItem from a given JSON response from the Tesco Labs API
+     * @param jsonData - the JSON response
+     * @throws JSONException
+     * @throws NotFoodOrDrinkException
+     * @throws NotTescoOwnBrandException
+     */
+    public FoodItem(String jsonData) throws JSONException, NotFoodOrDrinkException,
+            NotTescoOwnBrandException {
         mIngredients = new ArrayList<>();
         mNutrients = new Nutrient[NUTRIENT_NAMES.length];
         JSONObject productData = new JSONObject(jsonData);
@@ -51,66 +62,99 @@ public class FoodItem implements Parcelable {
         mProductName = products.getJSONObject(0).getString("description");
 
         //need to check here for what format the weight is in.
-        String unitsOM = products.getJSONObject(0).getJSONObject("qtyContents").getString("quantityUom");
+        String unitsOM = products.getJSONObject(0).getJSONObject("qtyContents")
+                .getString("quantityUom");
 
+        //calculate the weight in grams
         if(unitsOM.equals("ml") || unitsOM.equals("g")){
-            mWeight = products.getJSONObject(0).getJSONObject("qtyContents").getDouble("totalQuantity");
+            mWeight = products.getJSONObject(0).getJSONObject("qtyContents")
+                    .getDouble("totalQuantity");
         }else if(unitsOM.equals("kg") || unitsOM.equals("l")){
-            mWeight = products.getJSONObject(0).getJSONObject("qtyContents").getDouble("totalQuantity")*1000;
+            mWeight = products.getJSONObject(0).getJSONObject("qtyContents")
+                    .getDouble("totalQuantity")*1000;
         }else{
             throw new NotTescoOwnBrandException();
         }
 
-        JSONArray nutrientJSON = products.getJSONObject(0).getJSONObject("calcNutrition").getJSONArray("calcNutrients");
+        //get each nutrient and add it to the list of nutrients for this FoodItem
+        JSONArray nutrientJSON = products.getJSONObject(0).getJSONObject("calcNutrition")
+                .getJSONArray("calcNutrients");
         for (int i = 0; i < NUTRIENT_NAMES.length; i++) {
             String name = nutrientJSON.getJSONObject(i).getString("name");
             if(name.equals("Energy (kcal)")){
                 JSONObject current = nutrientJSON.getJSONObject(i-1);
-                double valuePer100 = Double.parseDouble(current.getString("valuePer100"))*KJTOKCAL;
-                double valuePerServing = Double.parseDouble(current.getString("valuePerServing"))*KJTOKCAL;
+                double valuePer100 = Double.parseDouble(current
+                        .getString("valuePer100"))*KJTOKCAL;
+                double valuePerServing = Double.parseDouble(current
+                        .getString("valuePerServing"))*KJTOKCAL;
                 mNutrients[i] = new Nutrient(name, valuePer100, valuePerServing);
             }else {
-                double valuePer100 = Double.parseDouble(nutrientJSON.getJSONObject(i).getString("valuePer100"));
-                double valuePerServing = Double.parseDouble(nutrientJSON.getJSONObject(i).getString("valuePerServing"));
+                double valuePer100 = Double.parseDouble(nutrientJSON.getJSONObject(i)
+                        .getString("valuePer100"));
+                double valuePerServing = Double.parseDouble(nutrientJSON.getJSONObject(i)
+                        .getString("valuePerServing"));
                 mNutrients[i] = new Nutrient(name, valuePer100, valuePerServing);
             }
         }
         mTimeAdded = new Date();
     }
 
+    /**
+     * Create a FoodItem from strings, and a list of nutrients
+     * @param productName - the name of the FoodItem
+     * @param ingredients - a comma separated list of ingredients
+     * @param nutrients - an array of Nutrients
+     */
     public FoodItem(String productName, String ingredients, Nutrient[] nutrients){
         mProductName = productName;
         mIngredients = new ArrayList<>();
         mNutrients = nutrients;
 
-
+        //split the ingredients string
         String[] split = ingredients.split(", ");
         for(String s : split){
             mIngredients.add(s);
         }
     }
+
+    /**
+     * Create a FoodItem from strings, a list of nutrients and the weight
+     * @param productName - the name of the FoodItem
+     * @param ingredients - a comma separated list of ingredients
+     * @param nutrients - an array of Nutrients
+     * @param weight - The total weight of the product
+     */
     public FoodItem(String productName, String ingredients, Nutrient[] nutrients, Double weight){
         mProductName = productName;
         mIngredients = new ArrayList<>();
         mNutrients = nutrients;
         mWeight = weight;
 
-
         String[] split = ingredients.split(", ");
         for(String s : split){
             mIngredients.add(s);
         }
     }
 
+    /**
+     * A method that checks whether a product is compatible with this app from a JSONArray
+     * @param products - The array to check
+     * @throws JSONException
+     * @throws NotFoodOrDrinkException - thrown if the item is not food or drink
+     * @throws NotTescoOwnBrandException - thrown if the product is the wrong brand
+     */
     private void checkUsableProduct(JSONArray products) throws JSONException,
             NotFoodOrDrinkException, NotTescoOwnBrandException {
-        if(!products.getJSONObject(0).getJSONObject("productCharacteristics").getBoolean("isFood") &&
-                !products.getJSONObject(0).getJSONObject("productCharacteristics").getBoolean("isDrink")){
+        if(!products.getJSONObject(0).getJSONObject("productCharacteristics")
+                .getBoolean("isFood") &&
+                !products.getJSONObject(0).getJSONObject("productCharacteristics")
+                        .getBoolean("isDrink")){
             throw new NotFoodOrDrinkException();
         }
         if(!products.getJSONObject(0).getString("brand").equals("TESCO") &&
                 !products.getJSONObject(0).getString("brand").equals("TESCO VALUE")){
-            throw new NotTescoOwnBrandException(products.getJSONObject(0).getString("brand"));
+            throw new NotTescoOwnBrandException(products.getJSONObject(0)
+                    .getString("brand"));
         }
     }
 
@@ -154,6 +198,11 @@ public class FoodItem implements Parcelable {
         return 0;
     }
 
+    /**
+     * Write object to parcelable to make it fast to pass between activities.
+     * @param dest
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mProductName);

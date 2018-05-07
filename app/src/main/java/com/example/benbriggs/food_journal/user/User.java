@@ -2,35 +2,42 @@ package com.example.benbriggs.food_journal.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 
 /**
- * Created by benbriggs on 29/11/2017.
+ *
  */
-
 public class User implements Parcelable{
 
     private ArrayList<FoodItem> mHistory;
     private ArrayList<Basket> mBasketHistory;
 
+    /**
+     * creates a user with an empty history and basket history
+     */
     public User(){
         mHistory        = new ArrayList<>();
         mBasketHistory  = new ArrayList<>();
     }
 
+    /**
+     * Adds a food item to the users history
+     * @param item
+     */
     public void addFoodItem(FoodItem item){
         mHistory.add(item);
     }
 
+    /**
+     * Adds a basket to the users basket history
+     * @param basket
+     */
     public void addBasket(Basket basket){
         mBasketHistory.add(0, basket);
-
-        Log.v("User", "Amount of baskets: " + mBasketHistory.size());
     }
 
-    public ArrayList<FoodItem> getHistory() {
+    ArrayList<FoodItem> getHistory() {
         return mHistory;
     }
 
@@ -38,20 +45,8 @@ public class User implements Parcelable{
         return mBasketHistory;
     }
 
-    public void setHistory(ArrayList<FoodItem> history) {
+    void setHistory(ArrayList<FoodItem> history) {
         mHistory = history;
-    }
-
-    public void setBasketHistory(ArrayList<Basket> basketHistory) {
-        mBasketHistory = basketHistory;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "mHistory=" + mHistory +
-                ",\nmBasketHistory=" + mBasketHistory +
-                '}';
     }
 
     @Override
@@ -59,13 +54,18 @@ public class User implements Parcelable{
         return 0;
     }
 
+    /**
+     * Write object to parcelable to make it fast to pass between activities.
+     * @param dest
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.mHistory);
         dest.writeTypedList(this.mBasketHistory);
     }
 
-    protected User(Parcel in) {
+    private User(Parcel in) {
         this.mHistory = in.createTypedArrayList(FoodItem.CREATOR);
         this.mBasketHistory = in.createTypedArrayList(Basket.CREATOR);
     }
